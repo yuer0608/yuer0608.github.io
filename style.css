@@ -129,3 +129,7 @@ h1 {
 #data-table tbody tr:hover {
     background-color: #e2eafc;
 } 
+
+#school-search {
+    height: 30px;
+}
