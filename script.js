@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const yearSelect = document.getElementById("year-select");
   const scoreLineInfo = document.getElementById("score-line-info");
+  const sourceLink = document.getElementById("source-link");
   const filtersContainer = document.getElementById("filters-container");
   const tableHead = document.querySelector("#data-table thead");
   const tableBody = document.querySelector("#data-table tbody");
@@ -8,6 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let allData = [];
   let columnOrder = [];
   let activeFilters = {};
+
+  const sourceUrls = {
+    2024: "https://jyt.hunan.gov.cn/jyt/xzxx/202407/t20240720_33432339.html",
+    2023: "https://jyt.hunan.gov.cn/jyt/xzxx/202307/t20230720_29480478.html",
+    2022: "https://jyt.hunan.gov.cn/jyt/xzxx/202207/t20220720_29118205.html",
+    2021: "https://jyt.hunan.gov.cn/jyt/sjyt/hnsjyksy/web/ksyzkzx/202107/t20210719_22743315.html",
+  };
 
   const scoreLines = {
     2024: { 物理类: 422, 历史类: 438 },
@@ -25,6 +33,15 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     } else {
       scoreLineInfo.innerHTML = "";
+    }
+  }
+
+  function updateSourceLink(year) {
+    if (sourceUrls[year]) {
+      sourceLink.href = sourceUrls[year];
+      sourceLink.style.display = "inline";
+    } else {
+      sourceLink.style.display = "none";
     }
   }
 
@@ -176,10 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedYear = e.target.value;
     loadData(selectedYear);
     updateScoreLineInfo(selectedYear);
+    updateSourceLink(selectedYear);
   });
 
   // Initial load
   const initialYear = yearSelect.value;
   loadData(initialYear);
   updateScoreLineInfo(initialYear);
+  updateSourceLink(initialYear);
 });
