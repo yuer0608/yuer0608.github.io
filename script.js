@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const yearSelect = document.getElementById("year-select");
+  const schoolSearch = document.getElementById("school-search");
   const scoreLineInfo = document.getElementById("score-line-info");
   const sourceLink = document.getElementById("source-link");
   const filtersContainer = document.getElementById("filters-container");
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       allData = data.data;
       columnOrder = data.columns;
+      renderHeader();
       generateFilters();
       renderTable();
     } catch (error) {
@@ -64,12 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function renderTable() {
-    // Clear existing table
+  function renderHeader() {
     tableHead.innerHTML = "";
-    tableBody.innerHTML = "";
-
-    // Render header
     const headerRow = document.createElement("tr");
     columnOrder.forEach((col) => {
       const th = document.createElement("th");
@@ -77,9 +75,22 @@ document.addEventListener("DOMContentLoaded", () => {
       headerRow.appendChild(th);
     });
     tableHead.appendChild(headerRow);
+  }
+
+  function renderTable() {
+    // Clear existing table
+    tableBody.innerHTML = "";
 
     // Filter data
+    const searchTerm = schoolSearch.value.toLowerCase();
     const filteredData = allData.filter((row) => {
+      if (searchTerm) {
+        const schoolName = row["院校名称"] ? row["院校名称"].toLowerCase() : "";
+        if (!schoolName.includes(searchTerm)) {
+          return false;
+        }
+      }
+
       for (const key in activeFilters) {
         const filterValue = activeFilters[key];
 
@@ -188,6 +199,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderTable();
   }
+
+  schoolSearch.addEventListener("input", renderTable);
 
   yearSelect.addEventListener("change", (e) => {
     const selectedYear = e.target.value;
