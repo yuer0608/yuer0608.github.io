@@ -13,7 +13,7 @@ function activateView(viewName) {
   });
 
   sideTrips.forEach((trip) => {
-    trip.classList.toggle("is-active", viewName === "list" || viewName === "trip");
+    trip.classList.toggle("is-active", viewName === "list");
   });
 }
 

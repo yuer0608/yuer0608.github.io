@@ -193,9 +193,7 @@ button {
 }
 
 .side-trip,
-.trip-card,
-.top-tab,
-.back-button {
+.top-tab {
   border: 0;
   cursor: pointer;
 }
@@ -224,6 +222,27 @@ button {
   box-shadow: inset 0 0 0 2px rgba(255, 214, 230, 0.66);
 }
 
+.compact-card {
+  display: grid;
+  gap: 10px;
+}
+
+.quick-link {
+  display: block;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  color: #93425f;
+  background: rgba(255, 242, 248, 0.68);
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.quick-link:hover {
+  background: #ffe1ed;
+}
+
 .content-panel {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
@@ -246,8 +265,7 @@ button {
 }
 
 .top-tab,
-.back-button,
-.trip-toolbar a {
+.top-tab {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -262,8 +280,7 @@ button {
 }
 
 .top-tab.is-active,
-.back-button:hover,
-.trip-toolbar a:hover {
+.top-tab:hover {
   color: #fff;
   background: linear-gradient(135deg, #f58bb5, #ffb87f);
   box-shadow: 0 12px 26px rgba(245, 139, 181, 0.24);
@@ -362,7 +379,9 @@ button {
   gap: 22px;
   width: calc(100% - 44px);
   padding: clamp(22px, 4vw, 38px);
+  color: inherit;
   text-align: left;
+  text-decoration: none;
   background:
     radial-gradient(circle at 96% 10%, rgba(201, 243, 219, 0.88), transparent 11rem),
     linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 241, 248, 0.82));
@@ -386,6 +405,11 @@ button {
   font-weight: 900;
 }
 
+.yunnan-tag {
+  color: #6f4b1f;
+  background: #ffedc3;
+}
+
 .trip-card h3 {
   font-size: clamp(30px, 4vw, 54px);
   line-height: 1.05;
@@ -405,34 +429,6 @@ button {
   font-size: 13px;
   font-weight: 900;
   white-space: nowrap;
-}
-
-.trip-view.is-active {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  height: calc(100vh - 105px);
-}
-
-.trip-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid rgba(190, 122, 148, 0.16);
-  background: rgba(255, 248, 252, 0.8);
-}
-
-.back-button {
-  color: #93425f;
-}
-
-.trip-frame {
-  width: 100%;
-  height: 100%;
-  min-height: 720px;
-  border: 0;
-  background: #fff7ef;
 }
 
 @media (max-width: 920px) {
@@ -495,11 +491,4 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .trip-view.is-active {
-    height: calc(100vh - 90px);
-  }
-
-  .trip-frame {
-    min-height: 680px;
-  }
 }

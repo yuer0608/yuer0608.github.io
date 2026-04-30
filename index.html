@@ -21,9 +21,19 @@
       <section class="side-card">
         <p class="side-title">旅游菜单</p>
         <button class="side-trip is-active" type="button" data-view-target="list">
-          <span>杭州五一亲子 2 天 1 夜</span>
-          <small>点击中间卡片看完整行程</small>
+          <span>旅游行程列表</span>
+          <small>点击右侧卡片会新开窗口</small>
         </button>
+      </section>
+
+      <section class="side-card compact-card">
+        <p class="side-title">快速打开</p>
+        <a class="quick-link" href="hangzhou-family-trip.html" target="_blank" rel="noopener">
+          <span>杭州五一亲子 2 天 1 夜</span>
+        </a>
+        <a class="quick-link" href="yunnan-family-road-trip.html" target="_blank" rel="noopener">
+          <span>云南五一 9 天自驾</span>
+        </a>
       </section>
     </aside>
 
@@ -31,7 +41,6 @@
       <nav class="top-tabs" aria-label="页面切换菜单">
         <button class="top-tab is-active" type="button" data-view-target="profile">个人信息</button>
         <button class="top-tab" type="button" data-view-target="list">旅游列表</button>
-        <button class="top-tab" type="button" data-view-target="trip">杭州行程</button>
       </nav>
 
       <section class="view is-active" id="view-profile" data-view="profile">
@@ -39,7 +48,7 @@
           <span class="sticker">hello</span>
           <p class="kicker">Personal Page</p>
           <h2>罗玉姣的小主页</h2>
-          <p>这里先简单放个人信息，也可以从上面的菜单切换到旅游列表，再进入杭州亲子行程。</p>
+          <p>这里先简单放个人信息，也可以从上面的菜单切换到旅游列表；点击旅游卡片会在新窗口打开完整行程。</p>
           <div class="info-grid">
             <div><span>姓名</span><strong>罗玉姣</strong></div>
             <div><span>性别</span><strong>女</strong></div>
@@ -51,10 +60,10 @@
         <div class="list-heading">
           <p class="kicker">Trip List</p>
           <h2>旅游行程列表</h2>
-          <p>目前只有一条杭州行程。点击卡片后，中间区域会切换成原始行程页面的完整展示。</p>
+          <p>目前有杭州和云南两条行程。每条行程都保留原始 HTML 的内容和样式，点击后新开窗口查看。</p>
         </div>
 
-        <button class="trip-card" type="button" data-view-target="trip">
+        <a class="trip-card" href="hangzhou-family-trip.html" target="_blank" rel="noopener">
           <div class="trip-card-main">
             <span class="trip-tag">五一亲子自驾</span>
             <h3>杭州五一亲子 2 天 1 夜行程</h3>
@@ -65,15 +74,20 @@
             <span>一家三口</span>
             <span>约 1,760-1,840 元</span>
           </div>
-        </button>
-      </section>
+        </a>
 
-      <section class="view trip-view" id="view-trip" data-view="trip">
-        <div class="trip-toolbar">
-          <button class="back-button" type="button" data-view-target="list">返回旅游列表</button>
-          <a href="hangzhou-family-trip.html" target="_blank" rel="noopener">新窗口打开</a>
-        </div>
-        <iframe class="trip-frame" title="杭州五一亲子 2 天 1 夜行程单" src="hangzhou-family-trip.html"></iframe>
+        <a class="trip-card" href="yunnan-family-road-trip.html" target="_blank" rel="noopener">
+          <div class="trip-card-main">
+            <span class="trip-tag yunnan-tag">广州出发 · 云南自驾</span>
+            <h3>云南五一 9 天家庭自驾行程</h3>
+            <p>广州出发，沿云南山水和古城慢慢走，完整行程会在新窗口打开。</p>
+          </div>
+          <div class="trip-card-meta">
+            <span>9天</span>
+            <span>家庭自驾</span>
+            <span>云南</span>
+          </div>
+        </a>
       </section>
     </main>
   </div>
