@@ -1,0 +1,2603 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>判断题</title>
+  <style>
+    :root {
+      --ink: #1d1b16;
+      --muted: #716a5d;
+      --paper: #f6f0e4;
+      --card: #fffaf0;
+      --line: #dacdb7;
+      --accent: #b23b22;
+      --accent-2: #1f6f62;
+      --code: #202018;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(178, 59, 34, .16), transparent 28rem),
+        radial-gradient(circle at 88% 16%, rgba(31, 111, 98, .15), transparent 24rem),
+        linear-gradient(135deg, #fbf6eb, var(--paper));
+      font-family: "Baskerville", "Songti SC", "STSong", serif;
+    }
+    .page { width: min(1180px, calc(100% - 36px)); margin: 0 auto; padding: 28px 0 64px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding: 20px 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 250, 240, .84);
+      box-shadow: 0 12px 34px rgba(62, 45, 24, .10);
+    }
+    .eyebrow { margin: 0 0 8px; letter-spacing: .18em; color: var(--accent); font-size: 13px; font-weight: 700; }
+    h1 { margin: 0; font-size: clamp(28px, 4vw, 48px); line-height: 1; letter-spacing: -.03em; }
+    .subtitle { margin: 14px 0 0; color: var(--muted); font-size: 16px; }
+    nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    nav a, .pill {
+      color: var(--ink);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      background: #fff7e8;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .toolbar { display: flex; gap: 12px; margin: 22px 0; flex-wrap: wrap; align-items: center; }
+    input[type="search"] {
+      flex: 1 1 320px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 250, 240, .92);
+      padding: 15px 18px;
+      font-size: 16px;
+      color: var(--ink);
+      outline: none;
+    }
+    .stats { color: var(--muted); font-weight: 700; }
+    html { scroll-behavior: smooth; }
+    .page { width: min(1360px, calc(100% - 36px)); }
+    .content-shell {
+      display: grid;
+      grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .content-list { min-width: 0; }
+    .side-panel {
+      position: sticky;
+      top: 16px;
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 250, 240, .94);
+      box-shadow: 0 12px 34px rgba(62, 45, 24, .09);
+      padding: 14px;
+    }
+    .side-panel-head { display: grid; gap: 8px; padding: 4px 2px 12px; border-bottom: 1px solid var(--line); }
+    .side-kicker { margin: 0; letter-spacing: .16em; color: var(--accent); font-size: 12px; font-weight: 900; }
+    .side-panel-title { font-size: 18px; font-weight: 900; }
+    .side-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .side-actions button, .toc-toggle {
+      border: 1px solid var(--line);
+      background: #fff7e8;
+      color: var(--ink);
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .side-actions button { padding: 6px 10px; font-size: 12px; }
+    .side-actions button:hover, .toc-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .side-nav { display: grid; gap: 10px; padding-top: 12px; }
+    .toc-empty { margin: 0; color: var(--muted); font-weight: 700; }
+    .toc-major { border: 1px solid rgba(218, 205, 183, .72); border-radius: 14px; background: #fffdf6; overflow: hidden; }
+    .toc-row { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; align-items: center; }
+    .toc-major-row { padding: 9px 10px; background: rgba(246, 240, 228, .72); }
+    .toc-minor-row { padding: 7px 8px 5px 12px; }
+    .toc-toggle { width: 28px; height: 28px; padding: 0; line-height: 1; }
+    .toc-toggle::before { content: '-'; }
+    .toc-toggle[aria-expanded="false"]::before { content: '+'; }
+    .toc-title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; min-width: 0; font-weight: 900; color: var(--accent); }
+    .toc-range { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .toc-count { flex: 0 0 auto; color: var(--muted); font-size: 12px; }
+    .toc-minors, .toc-questions { list-style: none; margin: 0; padding: 4px 8px 8px; }
+    .toc-minor { border-top: 1px solid rgba(218, 205, 183, .55); }
+    .toc-minor-title { color: var(--ink); font-weight: 900; }
+    .toc-question { border-radius: 10px; }
+    .toc-question.hidden, .toc-minor.hidden, .toc-major.hidden { display: none; }
+    .toc-question a {
+      display: block;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 800;
+      padding: 5px 8px 5px 44px;
+      border-radius: 10px;
+    }
+    .toc-question a:hover { color: var(--accent); background: rgba(178, 59, 34, .07); }
+    .toc-question.active a { color: var(--accent); background: rgba(178, 59, 34, .10); }
+    .grid { display: flex; flex-direction: column; gap: 12px; }
+    .question, .op-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 250, 240, .92);
+      box-shadow: 0 10px 28px rgba(62, 45, 24, .07);
+      overflow: hidden;
+    }
+    .question { padding: 14px 16px; }
+    .qhead { display: flex; justify-content: space-between; gap: 12px; align-items: start; margin-bottom: 12px; }
+    .num { color: var(--accent); font-weight: 900; font-size: 20px; }
+    .answer { color: #fff; background: var(--accent-2); border-radius: 999px; padding: 5px 10px; font-weight: 900; min-width: 44px; text-align: center; }
+    .stem { line-height: 1.72; white-space: pre-wrap; }
+    .op-card { margin: 14px 0; padding: 18px 20px; }
+    .card-title { margin: 0 0 16px; font-size: 22px; font-weight: 900; color: var(--accent); }
+    .op-section { margin: 16px 0; padding-top: 12px; border-top: 1px solid var(--line); }
+    .op-section h3 { margin: 0 0 10px; color: var(--accent-2); }
+    .md h2, .md h3 { margin-top: 1.2em; }
+    .md table { width: 100%; border-collapse: collapse; margin: 12px 0; background: #fffdf6; }
+    .md th, .md td { border: 1px solid var(--line); padding: 8px 10px; vertical-align: top; }
+    pre { overflow: auto; background: var(--code); color: #f7eed8; border-radius: 18px; padding: 16px; line-height: 1.55; }
+    code { font-family: "SFMono-Regular", "Consolas", monospace; }
+    .material { border: 1px dashed var(--line); border-radius: 14px; padding: 12px; margin: 10px 0; background: #fffdf6; word-break: break-word; }
+    .material h4 { margin: 0 0 8px; font-family: "SFMono-Regular", "Consolas", monospace; color: var(--accent); }
+    details.material summary { cursor: pointer; font-weight: 900; color: var(--accent); }
+    .json-tree { margin: 8px 0 0; font-family: "SFMono-Regular", "Consolas", monospace; font-size: 13px; line-height: 1.55; }
+    .json-tree details { margin-left: 18px; }
+    .json-tree summary { cursor: pointer; color: var(--accent-2); }
+    .json-key { color: #8f2f1b; font-weight: 700; }
+    .json-string { color: #1f6f62; }
+    .json-number { color: #7952b3; }
+    .json-bool { color: #b23b22; }
+    .media { max-width: 100%; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    video.media { width: min(720px, 100%); display: block; }
+    .hidden { display: none !important; }
+    footer { margin: 34px 0 0; color: var(--muted); text-align: center; }
+    @media (max-width: 980px) {
+      .content-shell { grid-template-columns: 1fr; }
+      .side-panel { position: static; max-height: 52vh; }
+    }
+    @media (max-width: 760px) {
+      .hero { grid-template-columns: 1fr; padding: 18px; }
+      nav { justify-content: flex-start; }
+      .grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+  <main class="page">
+    
+    <header class="hero">
+      <div>
+        <p class="eyebrow">计算机程序设计员 · 三级</p>
+        <h1>判断题</h1>
+        <p class="subtitle">题干来自 PDF 题库，答案来自已整理 Markdown；操作题已把对应素材内容嵌入题目下方。</p>
+      </div>
+      <nav>
+        <a href="计算机程序设计员三级_判断题.html">判断题</a>
+        <a href="index.html">选择题</a>
+        <a href="计算机程序设计员三级_操作题.html">操作题</a>
+      </nav>
+    </header>
+    
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="搜索题号、题干或答案">
+      <span class="pill">显示 <span id="count">0</span></span>
+    </section>
+    <div class="content-shell">
+      <aside class="side-panel" aria-label="题目目录">
+        <div class="side-panel-head">
+          <p class="side-kicker">题目导航</p>
+          <div class="side-panel-title">按题号快速跳转</div>
+          <div class="side-actions">
+            <button id="toc-expand-all" type="button">全部展开</button>
+            <button id="toc-collapse-all" type="button">全部收起</button>
+          </div>
+        </div>
+        <nav id="toc" class="side-nav" aria-label="题目目录">
+          <p class="toc-empty">目录生成中...</p>
+        </nav>
+      </aside>
+      <section class="grid content-list">
+        <article class="question" data-search="1 职业道德是从业者在职业活动中应该遵循的符合自身职业特点的职业行为规范。 √">
+          <div class="qhead"><span class="num">第 1 题</span><span class="answer">√</span></div>
+          <div class="stem">职业道德是从业者在职业活动中应该遵循的符合自身职业特点的职业行为规范。</div>
+        </article>
+
+        <article class="question" data-search="2 社会主义职业道德的指导原则是为人民服务。 √">
+          <div class="qhead"><span class="num">第 2 题</span><span class="answer">√</span></div>
+          <div class="stem">社会主义职业道德的指导原则是为人民服务。</div>
+        </article>
+
+        <article class="question" data-search="3 职业道德与个人品德是互相影响、互相促进的正相关关系。 √">
+          <div class="qhead"><span class="num">第 3 题</span><span class="answer">√</span></div>
+          <div class="stem">职业道德与个人品德是互相影响、互相促进的正相关关系。</div>
+        </article>
+
+        <article class="question" data-search="4 “爱国守法、明礼诚信、团结友善、勤俭自强、敬业奉献”的公民基本道德规范与
+“爱岗敬业、诚实守信、办事公道、服务群众、奉献社会”的职业道德规范没有内在关系。 ×">
+          <div class="qhead"><span class="num">第 4 题</span><span class="answer">×</span></div>
+          <div class="stem">“爱国守法、明礼诚信、团结友善、勤俭自强、敬业奉献”的公民基本道德规范与
+“爱岗敬业、诚实守信、办事公道、服务群众、奉献社会”的职业道德规范没有内在关系。</div>
+        </article>
+
+        <article class="question" data-search="5 爱岗敬业、忠于职守就要干一行，爱一行，终身只能从事某职业。 ×">
+          <div class="qhead"><span class="num">第 5 题</span><span class="answer">×</span></div>
+          <div class="stem">爱岗敬业、忠于职守就要干一行，爱一行，终身只能从事某职业。</div>
+        </article>
+
+        <article class="question" data-search="6 诚实守信就是在任何时候都要实事求是，任何情况下绝不能讲假话。 ×">
+          <div class="qhead"><span class="num">第 6 题</span><span class="answer">×</span></div>
+          <div class="stem">诚实守信就是在任何时候都要实事求是，任何情况下绝不能讲假话。</div>
+        </article>
+
+        <article class="question" data-search="7 服务群众最终要达到的最佳效果是优质服务。 √">
+          <div class="qhead"><span class="num">第 7 题</span><span class="answer">√</span></div>
+          <div class="stem">服务群众最终要达到的最佳效果是优质服务。</div>
+        </article>
+
+        <article class="question" data-search="8 奉献社会，不光是为了名和利，也为了有益于他人，有益于国家和社会。 √">
+          <div class="qhead"><span class="num">第 8 题</span><span class="answer">√</span></div>
+          <div class="stem">奉献社会，不光是为了名和利，也为了有益于他人，有益于国家和社会。</div>
+        </article>
+
+        <article class="question" data-search="9 创新是个人事业成功的保障，创新蕴含着巨大的经济价值和社会价值。 √">
+          <div class="qhead"><span class="num">第 9 题</span><span class="answer">√</span></div>
+          <div class="stem">创新是个人事业成功的保障，创新蕴含着巨大的经济价值和社会价值。</div>
+        </article>
+
+        <article class="question" data-search="10 精通业务与职业道德无关。 ×">
+          <div class="qhead"><span class="num">第 10 题</span><span class="answer">×</span></div>
+          <div class="stem">精通业务与职业道德无关。</div>
+        </article>
+
+        <article class="question" data-search="11 产品质量、安全生产有相应的法律规定，因此不属于职业道德规范。 ×">
+          <div class="qhead"><span class="num">第 11 题</span><span class="answer">×</span></div>
+          <div class="stem">产品质量、安全生产有相应的法律规定，因此不属于职业道德规范。</div>
+        </article>
+
+        <article class="question" data-search="12 维护公共秩序和保护生态环境应该从我做起，勿以恶小而为之。 √">
+          <div class="qhead"><span class="num">第 12 题</span><span class="answer">√</span></div>
+          <div class="stem">维护公共秩序和保护生态环境应该从我做起，勿以恶小而为之。</div>
+        </article>
+
+        <article class="question" data-search="13 现代企业的团队精神属于行业职业道德规范之一。 √">
+          <div class="qhead"><span class="num">第 13 题</span><span class="answer">√</span></div>
+          <div class="stem">现代企业的团队精神属于行业职业道德规范之一。</div>
+        </article>
+
+        <article class="question" data-search="14 勤俭节约只是我国的传统美德，只是体现在家庭美德上，和职业道德没有关系。 ×">
+          <div class="qhead"><span class="num">第 14 题</span><span class="answer">×</span></div>
+          <div class="stem">勤俭节约只是我国的传统美德，只是体现在家庭美德上，和职业道德没有关系。</div>
+        </article>
+
+        <article class="question" data-search="15 计算机程序设计员对其同行应持团结协作、互帮互助的态度。 √">
+          <div class="qhead"><span class="num">第 15 题</span><span class="answer">√</span></div>
+          <div class="stem">计算机程序设计员对其同行应持团结协作、互帮互助的态度。</div>
+        </article>
+
+        <article class="question" data-search="16 计算机基本工作原理是存储程序和程序控制，它是由世界著名数学家冯·诺依曼提
+出的。 √">
+          <div class="qhead"><span class="num">第 16 题</span><span class="answer">√</span></div>
+          <div class="stem">计算机基本工作原理是存储程序和程序控制，它是由世界著名数学家冯·诺依曼提
+出的。</div>
+        </article>
+
+        <article class="question" data-search="17 超级计算机通常是指由数百数千甚至更多的处理器（机）组成的、能计算普通 PC
+机和服务器不能完成的大型复杂课题的计算机。 √">
+          <div class="qhead"><span class="num">第 17 题</span><span class="answer">√</span></div>
+          <div class="stem">超级计算机通常是指由数百数千甚至更多的处理器（机）组成的、能计算普通 PC
+机和服务器不能完成的大型复杂课题的计算机。</div>
+        </article>
+
+        <article class="question" data-search="18 所谓 4 位、8 位、16 位和 32 位微处理器是按处理器的字长来划分的。 √">
+          <div class="qhead"><span class="num">第 18 题</span><span class="answer">√</span></div>
+          <div class="stem">所谓 4 位、8 位、16 位和 32 位微处理器是按处理器的字长来划分的。</div>
+        </article>
+
+        <article class="question" data-search="19 CPU 主频也叫时钟频率，单位是兆赫或千兆赫，其作用是决定总线数据传输速度。 ×">
+          <div class="qhead"><span class="num">第 19 题</span><span class="answer">×</span></div>
+          <div class="stem">CPU 主频也叫时钟频率，单位是兆赫或千兆赫，其作用是决定总线数据传输速度。</div>
+        </article>
+
+        <article class="question" data-search="20 主板一般为矩形电路板，上面安装了组成计算机的主要电路系统，一般有 BIOS 芯
+片、I/O 控制芯片、键盘和面板控制开关接口、指示灯插接件、扩充插槽、主板及插卡的直
+流电源供电接插件等元件。 √">
+          <div class="qhead"><span class="num">第 20 题</span><span class="answer">√</span></div>
+          <div class="stem">主板一般为矩形电路板，上面安装了组成计算机的主要电路系统，一般有 BIOS 芯
+片、I/O 控制芯片、键盘和面板控制开关接口、指示灯插接件、扩充插槽、主板及插卡的直
+流电源供电接插件等元件。</div>
+        </article>
+
+        <article class="question" data-search="21 操作系统中的进程管理负责处理用户提交的任何要求。 ×">
+          <div class="qhead"><span class="num">第 21 题</span><span class="answer">×</span></div>
+          <div class="stem">操作系统中的进程管理负责处理用户提交的任何要求。</div>
+        </article>
+
+        <article class="question" data-search="22 办公软件是指可以进行文字处理、表格制作、幻灯片制作、图形图像处理、简单数
+据库的处理等方面工作的软件。 √">
+          <div class="qhead"><span class="num">第 22 题</span><span class="answer">√</span></div>
+          <div class="stem">办公软件是指可以进行文字处理、表格制作、幻灯片制作、图形图像处理、简单数
+据库的处理等方面工作的软件。</div>
+        </article>
+
+        <article class="question" data-search="23 语法错误是指代码在编译阶段无法通过语法分析器的检查。 √">
+          <div class="qhead"><span class="num">第 23 题</span><span class="answer">√</span></div>
+          <div class="stem">语法错误是指代码在编译阶段无法通过语法分析器的检查。</div>
+        </article>
+
+        <article class="question" data-search="24 数据结构是带“结构”的数据元素的集合，即相互之间存在一种且只有一种特定关
+系的数据元素的集合。 ×">
+          <div class="qhead"><span class="num">第 24 题</span><span class="answer">×</span></div>
+          <div class="stem">数据结构是带“结构”的数据元素的集合，即相互之间存在一种且只有一种特定关
+系的数据元素的集合。</div>
+        </article>
+
+        <article class="question" data-search="25 概念模型使设计者的注意力能够从最重要的信息的组织结构和处理模式上解脱出
+来，而只集中在复杂的实现细节中。 ×">
+          <div class="qhead"><span class="num">第 25 题</span><span class="answer">×</span></div>
+          <div class="stem">概念模型使设计者的注意力能够从最重要的信息的组织结构和处理模式上解脱出
+来，而只集中在复杂的实现细节中。</div>
+        </article>
+
+        <article class="question" data-search="26 Operating system first appeared during the first computer generation. ×">
+          <div class="qhead"><span class="num">第 26 题</span><span class="answer">×</span></div>
+          <div class="stem">Operating system first appeared during the first computer generation.</div>
+        </article>
+
+        <article class="question" data-search="27 软件工程是一门纯粹的理论学科，不涉及实际应用。 ×">
+          <div class="qhead"><span class="num">第 27 题</span><span class="answer">×</span></div>
+          <div class="stem">软件工程是一门纯粹的理论学科，不涉及实际应用。</div>
+        </article>
+
+        <article class="question" data-search="28 在变量名中使用拼音是一种良好的编码习惯，有助于程序的可读性。 ×">
+          <div class="qhead"><span class="num">第 28 题</span><span class="answer">×</span></div>
+          <div class="stem">在变量名中使用拼音是一种良好的编码习惯，有助于程序的可读性。</div>
+        </article>
+
+        <article class="question" data-search="29 系统运行管理阶段主要包括对系统性能的监测和灾难恢复计划的制定。 √">
+          <div class="qhead"><span class="num">第 29 题</span><span class="answer">√</span></div>
+          <div class="stem">系统运行管理阶段主要包括对系统性能的监测和灾难恢复计划的制定。</div>
+        </article>
+
+        <article class="question" data-search="30 在对高级语言编写的源程序进行编译时，可发现源程序中的全部语法错误和全部语
+义错误。 ×">
+          <div class="qhead"><span class="num">第 30 题</span><span class="answer">×</span></div>
+          <div class="stem">在对高级语言编写的源程序进行编译时，可发现源程序中的全部语法错误和全部语
+义错误。</div>
+        </article>
+
+        <article class="question" data-search="31 共享软件受版权法保护。 √">
+          <div class="qhead"><span class="num">第 31 题</span><span class="answer">√</span></div>
+          <div class="stem">共享软件受版权法保护。</div>
+        </article>
+
+        <article class="question" data-search="32 免费软件可以未经程序作者的同意，自由修改该软件的程序代码。 ×">
+          <div class="qhead"><span class="num">第 32 题</span><span class="answer">×</span></div>
+          <div class="stem">免费软件可以未经程序作者的同意，自由修改该软件的程序代码。</div>
+        </article>
+
+        <article class="question" data-search="33 常用的软件许可证包括：GPL 许可证、BSD 许可证、私权软件许可证等。 √">
+          <div class="qhead"><span class="num">第 33 题</span><span class="answer">√</span></div>
+          <div class="stem">常用的软件许可证包括：GPL 许可证、BSD 许可证、私权软件许可证等。</div>
+        </article>
+
+        <article class="question" data-search="34 在计算机网络中，LAN 代表的是互联网。 ×">
+          <div class="qhead"><span class="num">第 34 题</span><span class="answer">×</span></div>
+          <div class="stem">在计算机网络中，LAN 代表的是互联网。</div>
+        </article>
+
+        <article class="question" data-search="35 集线器的作用是扩展网络的距离，减轻网络的负载。 ×">
+          <div class="qhead"><span class="num">第 35 题</span><span class="answer">×</span></div>
+          <div class="stem">集线器的作用是扩展网络的距离，减轻网络的负载。</div>
+        </article>
+
+        <article class="question" data-search="36 网络协议为计算机网络中进行数据交换而建立的规则、标准或约定的集合。 √">
+          <div class="qhead"><span class="num">第 36 题</span><span class="answer">√</span></div>
+          <div class="stem">网络协议为计算机网络中进行数据交换而建立的规则、标准或约定的集合。</div>
+        </article>
+
+        <article class="question" data-search="37 计算机网络总线型拓朴结构由中央节点和通过点到点的链路接到中央节点的各站
+点组成。 ×">
+          <div class="qhead"><span class="num">第 37 题</span><span class="answer">×</span></div>
+          <div class="stem">计算机网络总线型拓朴结构由中央节点和通过点到点的链路接到中央节点的各站
+点组成。</div>
+        </article>
+
+        <article class="question" data-search="38 移动终端具有便携性、无线性、多样性、连通性、移动性等特点。 √">
+          <div class="qhead"><span class="num">第 38 题</span><span class="answer">√</span></div>
+          <div class="stem">移动终端具有便携性、无线性、多样性、连通性、移动性等特点。</div>
+        </article>
+
+        <article class="question" data-search="39 移动终端具有便携性、无线性、多样性、连通性、移动性等特点。 √">
+          <div class="qhead"><span class="num">第 39 题</span><span class="answer">√</span></div>
+          <div class="stem">移动终端具有便携性、无线性、多样性、连通性、移动性等特点。</div>
+        </article>
+
+        <article class="question" data-search="40 PDA 智能终端具有实时采集、自动存储、即时显示、即时反馈、自动处理、自动传
+输等功能，为现场数据的真实性、有效性、实时性、可用性提供了保证。 √">
+          <div class="qhead"><span class="num">第 40 题</span><span class="answer">√</span></div>
+          <div class="stem">PDA 智能终端具有实时采集、自动存储、即时显示、即时反馈、自动处理、自动传
+输等功能，为现场数据的真实性、有效性、实时性、可用性提供了保证。</div>
+        </article>
+
+        <article class="question" data-search="41 Android 是一种基于 OSI 的自由及开放源代码的操作系统，主要使用于移动设备，
+如智能手机和平板电脑，由 Google 公司和开放手机联盟领导及开发。 ×">
+          <div class="qhead"><span class="num">第 41 题</span><span class="answer">×</span></div>
+          <div class="stem">Android 是一种基于 OSI 的自由及开放源代码的操作系统，主要使用于移动设备，
+如智能手机和平板电脑，由 Google 公司和开放手机联盟领导及开发。</div>
+        </article>
+
+        <article class="question" data-search="42 Web App 指的是移动端的 Web 浏览器，Web 浏览器所依附的操作系统不再是
+Windows 和 Linux，而是 iOS 和 Android。 ×">
+          <div class="qhead"><span class="num">第 42 题</span><span class="answer">×</span></div>
+          <div class="stem">Web App 指的是移动端的 Web 浏览器，Web 浏览器所依附的操作系统不再是
+Windows 和 Linux，而是 iOS 和 Android。</div>
+        </article>
+
+        <article class="question" data-search="43 Google 以 Apache 开源许可证的授权方式，发布了 Android 的源代码。 √">
+          <div class="qhead"><span class="num">第 43 题</span><span class="answer">√</span></div>
+          <div class="stem">Google 以 Apache 开源许可证的授权方式，发布了 Android 的源代码。</div>
+        </article>
+
+        <article class="question" data-search="44 响应式设计的理念是浏览器应该根据屏幕的大小选择不同的渲染方式。 √">
+          <div class="qhead"><span class="num">第 44 题</span><span class="answer">√</span></div>
+          <div class="stem">响应式设计的理念是浏览器应该根据屏幕的大小选择不同的渲染方式。</div>
+        </article>
+
+        <article class="question" data-search="45 计算机病毒疫情，是指某种计算机病毒爆发、流行的时间、范围、破坏特点、破坏
+后果等情况的报告或者预报。 √">
+          <div class="qhead"><span class="num">第 45 题</span><span class="answer">√</span></div>
+          <div class="stem">计算机病毒疫情，是指某种计算机病毒爆发、流行的时间、范围、破坏特点、破坏
+后果等情况的报告或者预报。</div>
+        </article>
+
+        <article class="question" data-search="46 通过修改某种已知计算机病毒的代码，使其能够躲过现有计算机病毒检测程序时，
+可以称这种新出现的计算机病毒是原来计算机病毒的变形。 √">
+          <div class="qhead"><span class="num">第 46 题</span><span class="answer">√</span></div>
+          <div class="stem">通过修改某种已知计算机病毒的代码，使其能够躲过现有计算机病毒检测程序时，
+可以称这种新出现的计算机病毒是原来计算机病毒的变形。</div>
+        </article>
+
+        <article class="question" data-search="47 SQL 注入是一种常见的攻击类型，攻击者尝试通过在输入字段中注入 SQL 代码来
+执行恶意数据库查询。 √">
+          <div class="qhead"><span class="num">第 47 题</span><span class="answer">√</span></div>
+          <div class="stem">SQL 注入是一种常见的攻击类型，攻击者尝试通过在输入字段中注入 SQL 代码来
+执行恶意数据库查询。</div>
+        </article>
+
+        <article class="question" data-search="48 强制访问控制“MAC”是一种基于角色的访问控制模型，用户的访问权限由其所属
+的角色确定。 ×">
+          <div class="qhead"><span class="num">第 48 题</span><span class="answer">×</span></div>
+          <div class="stem">强制访问控制“MAC”是一种基于角色的访问控制模型，用户的访问权限由其所属
+的角色确定。</div>
+        </article>
+
+        <article class="question" data-search="49 插头接触到水或潮湿的表面不会增加触电的风险。 ×">
+          <div class="qhead"><span class="num">第 49 题</span><span class="answer">×</span></div>
+          <div class="stem">插头接触到水或潮湿的表面不会增加触电的风险。</div>
+        </article>
+
+        <article class="question" data-search="50 烟雾报警器安装在厨房附近即可有效覆盖全屋，无需在其他房间安装。 ×">
+          <div class="qhead"><span class="num">第 50 题</span><span class="answer">×</span></div>
+          <div class="stem">烟雾报警器安装在厨房附近即可有效覆盖全屋，无需在其他房间安装。</div>
+        </article>
+
+        <article class="question" data-search="51 在爆炸危险区域，穿着化纤衣物比棉质衣物更安全，因为化纤不易产生静电。 ×">
+          <div class="qhead"><span class="num">第 51 题</span><span class="answer">×</span></div>
+          <div class="stem">在爆炸危险区域，穿着化纤衣物比棉质衣物更安全，因为化纤不易产生静电。</div>
+        </article>
+
+        <article class="question" data-search="52 所有的电子设备都应尽量避免接触水源，即使标有防水等级也不例外，因为长时间
+或深度浸泡仍可能导致损害。 √">
+          <div class="qhead"><span class="num">第 52 题</span><span class="answer">√</span></div>
+          <div class="stem">所有的电子设备都应尽量避免接触水源，即使标有防水等级也不例外，因为长时间
+或深度浸泡仍可能导致损害。</div>
+        </article>
+
+        <article class="question" data-search="53 在办公区域，只要安装了先进的防盗系统，就可以完全避免盗窃事件的发生。 ×">
+          <div class="qhead"><span class="num">第 53 题</span><span class="answer">×</span></div>
+          <div class="stem">在办公区域，只要安装了先进的防盗系统，就可以完全避免盗窃事件的发生。</div>
+        </article>
+
+        <article class="question" data-search="54 只要设置了复杂的密码，个人账户就绝对安全，无需担心信息泄露。 ×">
+          <div class="qhead"><span class="num">第 54 题</span><span class="answer">×</span></div>
+          <div class="stem">只要设置了复杂的密码，个人账户就绝对安全，无需担心信息泄露。</div>
+        </article>
+
+        <article class="question" data-search="55 《中华人民共和国民法典》规定，不动产物权的设立、变更、转让和消灭，未经登
+记，也可以发生效力。 ×">
+          <div class="qhead"><span class="num">第 55 题</span><span class="answer">×</span></div>
+          <div class="stem">《中华人民共和国民法典》规定，不动产物权的设立、变更、转让和消灭，未经登
+记，也可以发生效力。</div>
+        </article>
+
+        <article class="question" data-search="56 根据《中华人民共和国劳动法》，用人单位可以无理由随时解除与劳动者的劳动合
+同。 ×">
+          <div class="qhead"><span class="num">第 56 题</span><span class="answer">×</span></div>
+          <div class="stem">根据《中华人民共和国劳动法》，用人单位可以无理由随时解除与劳动者的劳动合
+同。</div>
+        </article>
+
+        <article class="question" data-search="57 《中华人民共和国刑法》规定，已满十四周岁不满十六周岁的人，犯故意杀人、故
+意伤害致人重伤或者死亡、强奸、抢劫、贩卖毒品、放火、爆炸、投放危险物质罪的，应当
+负刑事责任。 √">
+          <div class="qhead"><span class="num">第 57 题</span><span class="answer">√</span></div>
+          <div class="stem">《中华人民共和国刑法》规定，已满十四周岁不满十六周岁的人，犯故意杀人、故
+意伤害致人重伤或者死亡、强奸、抢劫、贩卖毒品、放火、爆炸、投放危险物质罪的，应当
+负刑事责任。</div>
+        </article>
+
+        <article class="question" data-search="58 根据《中华人民共和国著作权法》，职务作品的著作权一律属于单位。 ×">
+          <div class="qhead"><span class="num">第 58 题</span><span class="answer">×</span></div>
+          <div class="stem">根据《中华人民共和国著作权法》，职务作品的著作权一律属于单位。</div>
+        </article>
+
+        <article class="question" data-search="59 《中华人民共和国网络安全法》规定，任何个人和组织不得窃取或者以其他非法方
+式获取个人信息，不得非法出售或者非法向他人提供个人信息。 √">
+          <div class="qhead"><span class="num">第 59 题</span><span class="answer">√</span></div>
+          <div class="stem">《中华人民共和国网络安全法》规定，任何个人和组织不得窃取或者以其他非法方
+式获取个人信息，不得非法出售或者非法向他人提供个人信息。</div>
+        </article>
+
+        <article class="question" data-search="60 《中华人民共和国安全生产法》强调，安全生产工作应当以人为本，坚持人民至上、
+生命至上，把保护人民生命安全摆在首位。 √">
+          <div class="qhead"><span class="num">第 60 题</span><span class="answer">√</span></div>
+          <div class="stem">《中华人民共和国安全生产法》强调，安全生产工作应当以人为本，坚持人民至上、
+生命至上，把保护人民生命安全摆在首位。</div>
+        </article>
+
+        <article class="question" data-search="61 根据《中华人民共和国数据安全法》，任何个人和组织不得窃取或者以其他非法方
+式获取数据，不得非法出售或者非法向他人提供数据。 √">
+          <div class="qhead"><span class="num">第 61 题</span><span class="answer">√</span></div>
+          <div class="stem">根据《中华人民共和国数据安全法》，任何个人和组织不得窃取或者以其他非法方
+式获取数据，不得非法出售或者非法向他人提供数据。</div>
+        </article>
+
+        <article class="question" data-search="62 《中华人民共和国个人信息保护法》明确，个人信息处理者因业务需要，可以不受
+限制地向境外提供个人信息。 ×">
+          <div class="qhead"><span class="num">第 62 题</span><span class="answer">×</span></div>
+          <div class="stem">《中华人民共和国个人信息保护法》明确，个人信息处理者因业务需要，可以不受
+限制地向境外提供个人信息。</div>
+        </article>
+
+        <article class="question" data-search="63 《中华人民共和国保守国家秘密法》规定，机关、单位确定、变更和解除国家秘密，
+应当由承办人提出具体意见，经定密责任人审核批准。 √">
+          <div class="qhead"><span class="num">第 63 题</span><span class="answer">√</span></div>
+          <div class="stem">《中华人民共和国保守国家秘密法》规定，机关、单位确定、变更和解除国家秘密，
+应当由承办人提出具体意见，经定密责任人审核批准。</div>
+        </article>
+
+        <article class="question" data-search="64 根据《中华人民共和国著作权法》，作者的署名权、修改权、保护作品完整权的保
+护期不受限制。 √">
+          <div class="qhead"><span class="num">第 64 题</span><span class="answer">√</span></div>
+          <div class="stem">根据《中华人民共和国著作权法》，作者的署名权、修改权、保护作品完整权的保
+护期不受限制。</div>
+        </article>
+
+        <article class="question" data-search="65 《计算机软件保护条例》仅保护软件的源代码，不保护目标代码或其文档资料。 ×">
+          <div class="qhead"><span class="num">第 65 题</span><span class="answer">×</span></div>
+          <div class="stem">《计算机软件保护条例》仅保护软件的源代码，不保护目标代码或其文档资料。</div>
+        </article>
+
+        <article class="question" data-search="66 概要设计阶段的任务主要包括详细编写各个模块的源代码。 ×">
+          <div class="qhead"><span class="num">第 66 题</span><span class="answer">×</span></div>
+          <div class="stem">概要设计阶段的任务主要包括详细编写各个模块的源代码。</div>
+        </article>
+
+        <article class="question" data-search="67 概要设计说明书中不包含关于系统性能需求和限制的信息。 ×">
+          <div class="qhead"><span class="num">第 67 题</span><span class="answer">×</span></div>
+          <div class="stem">概要设计说明书中不包含关于系统性能需求和限制的信息。</div>
+        </article>
+
+        <article class="question" data-search="68 概要设计设计过程的主要活动之一是进行单元测试。 ×">
+          <div class="qhead"><span class="num">第 68 题</span><span class="answer">×</span></div>
+          <div class="stem">概要设计设计过程的主要活动之一是进行单元测试。</div>
+        </article>
+
+        <article class="question" data-search="69 静态体系结构和动态体系结构在概要设计中没有直接关联，它们是独立的方面。 ×">
+          <div class="qhead"><span class="num">第 69 题</span><span class="answer">×</span></div>
+          <div class="stem">静态体系结构和动态体系结构在概要设计中没有直接关联，它们是独立的方面。</div>
+        </article>
+
+        <article class="question" data-search="70 概要设计的准则中，“信息隐藏原则”旨在限制模块之间的信息交流，以降低系统
+的复杂性。 √">
+          <div class="qhead"><span class="num">第 70 题</span><span class="answer">√</span></div>
+          <div class="stem">概要设计的准则中，“信息隐藏原则”旨在限制模块之间的信息交流，以降低系统
+的复杂性。</div>
+        </article>
+
+        <article class="question" data-search="71 结构化设计方法强调将程序分解为小的、相对独立的模块，以便更容易理解、测试
+和维护。 √">
+          <div class="qhead"><span class="num">第 71 题</span><span class="answer">√</span></div>
+          <div class="stem">结构化设计方法强调将程序分解为小的、相对独立的模块，以便更容易理解、测试
+和维护。</div>
+        </article>
+
+        <article class="question" data-search="72 模块结构图及其功能说明主要用于描述程序的详细实现，包括每个模块的源代码。 ×">
+          <div class="qhead"><span class="num">第 72 题</span><span class="answer">×</span></div>
+          <div class="stem">模块结构图及其功能说明主要用于描述程序的详细实现，包括每个模块的源代码。</div>
+        </article>
+
+        <article class="question" data-search="73 软件层次图“H 图”主要用于描述软件模块之间的调用关系和执行顺序。 ×">
+          <div class="qhead"><span class="num">第 73 题</span><span class="answer">×</span></div>
+          <div class="stem">软件层次图“H 图”主要用于描述软件模块之间的调用关系和执行顺序。</div>
+        </article>
+
+        <article class="question" data-search="74 HIPO 图主要用于表示软件的层次结构，其中矩形表示模块，椭圆表示数据存储。 ×">
+          <div class="qhead"><span class="num">第 74 题</span><span class="answer">×</span></div>
+          <div class="stem">HIPO 图主要用于表示软件的层次结构，其中矩形表示模块，椭圆表示数据存储。</div>
+        </article>
+
+        <article class="question" data-search="75 在面向对象软件的文档中，时序图用于表示系统中不同对象之间的交互顺序。 √">
+          <div class="qhead"><span class="num">第 75 题</span><span class="answer">√</span></div>
+          <div class="stem">在面向对象软件的文档中，时序图用于表示系统中不同对象之间的交互顺序。</div>
+        </article>
+
+        <article class="question" data-search="76 面向对象模块设计的物理视图主要关注如何组织和存储类以及类之间的关系，而不
+涉及具体的数据存储方式。 ×">
+          <div class="qhead"><span class="num">第 76 题</span><span class="answer">×</span></div>
+          <div class="stem">面向对象模块设计的物理视图主要关注如何组织和存储类以及类之间的关系，而不
+涉及具体的数据存储方式。</div>
+        </article>
+
+        <article class="question" data-search="77 面向对象设计思想包括设计对象重构，抽象基础设计，继承化设计和多态性设计。 √">
+          <div class="qhead"><span class="num">第 77 题</span><span class="answer">√</span></div>
+          <div class="stem">面向对象设计思想包括设计对象重构，抽象基础设计，继承化设计和多态性设计。</div>
+        </article>
+
+        <article class="question" data-search="78 面向对象模块设计的进程视图主要关注系统的并发性和通信方式，以确保模块能够
+被多个进程正确访问。 √">
+          <div class="qhead"><span class="num">第 78 题</span><span class="answer">√</span></div>
+          <div class="stem">面向对象模块设计的进程视图主要关注系统的并发性和通信方式，以确保模块能够
+被多个进程正确访问。</div>
+        </article>
+
+        <article class="question" data-search="79 面向对象模块设计的开发视图主要关注确保系统的可维护性和可测试性，以便开发
+团队可以有效地进行系统维护和测试。 √">
+          <div class="qhead"><span class="num">第 79 题</span><span class="answer">√</span></div>
+          <div class="stem">面向对象模块设计的开发视图主要关注确保系统的可维护性和可测试性，以便开发
+团队可以有效地进行系统维护和测试。</div>
+        </article>
+
+        <article class="question" data-search="80 面向对象模块设计的场景视图主要关注系统的使用场景和用户交互，以确保系统符
+合用户的实际需求。 √">
+          <div class="qhead"><span class="num">第 80 题</span><span class="answer">√</span></div>
+          <div class="stem">面向对象模块设计的场景视图主要关注系统的使用场景和用户交互，以确保系统符
+合用户的实际需求。</div>
+        </article>
+
+        <article class="question" data-search="81 软件模块的详细设计阶段主要关注系统整体结构和模块间的关系。 ×">
+          <div class="qhead"><span class="num">第 81 题</span><span class="answer">×</span></div>
+          <div class="stem">软件模块的详细设计阶段主要关注系统整体结构和模块间的关系。</div>
+        </article>
+
+        <article class="question" data-search="82 软件模块详细设计的基本任务之一是规划系统的整体结构。 ×">
+          <div class="qhead"><span class="num">第 82 题</span><span class="answer">×</span></div>
+          <div class="stem">软件模块详细设计的基本任务之一是规划系统的整体结构。</div>
+        </article>
+
+        <article class="question" data-search="83 软件模块详细设计的具体内容中，算法描述主要用于定义系统的用户界面。 ×">
+          <div class="qhead"><span class="num">第 83 题</span><span class="answer">×</span></div>
+          <div class="stem">软件模块详细设计的具体内容中，算法描述主要用于定义系统的用户界面。</div>
+        </article>
+
+        <article class="question" data-search="84 在软件模块详细设计的具体方法中，时序图主要用于描述模块的状态及状态之间的
+转换关系。 ×">
+          <div class="qhead"><span class="num">第 84 题</span><span class="answer">×</span></div>
+          <div class="stem">在软件模块详细设计的具体方法中，时序图主要用于描述模块的状态及状态之间的
+转换关系。</div>
+        </article>
+
+        <article class="question" data-search="85 在软件模块详细设计的工具分类中，版本控制工具如 Git 通常用于绘制 UML 图。 ×">
+          <div class="qhead"><span class="num">第 85 题</span><span class="answer">×</span></div>
+          <div class="stem">在软件模块详细设计的工具分类中，版本控制工具如 Git 通常用于绘制 UML 图。</div>
+        </article>
+
+        <article class="question" data-search="86 程序流程图是一种静态工具，主要用于表示程序的源代码结构。 ×">
+          <div class="qhead"><span class="num">第 86 题</span><span class="answer">×</span></div>
+          <div class="stem">程序流程图是一种静态工具，主要用于表示程序的源代码结构。</div>
+        </article>
+
+        <article class="question" data-search="87 盒图主要用于表示程序的执行流程，其中每个盒子代表一个程序模块。 ×">
+          <div class="qhead"><span class="num">第 87 题</span><span class="answer">×</span></div>
+          <div class="stem">盒图主要用于表示程序的执行流程，其中每个盒子代表一个程序模块。</div>
+        </article>
+
+        <article class="question" data-search="88 问题分析图“PAD 图”主要用于表示系统的整体结构，其中方框代表系统中的各个
+模块。 ×">
+          <div class="qhead"><span class="num">第 88 题</span><span class="answer">×</span></div>
+          <div class="stem">问题分析图“PAD 图”主要用于表示系统的整体结构，其中方框代表系统中的各个
+模块。</div>
+        </article>
+
+        <article class="question" data-search="89 N-S 图与 PAD 图的转换是一一对应的，即 N-S 图中的每个元素都有唯一对应的
+PAD 图元素，反之亦然。 ×">
+          <div class="qhead"><span class="num">第 89 题</span><span class="answer">×</span></div>
+          <div class="stem">N-S 图与 PAD 图的转换是一一对应的，即 N-S 图中的每个元素都有唯一对应的
+PAD 图元素，反之亦然。</div>
+        </article>
+
+        <article class="question" data-search="90 判定表主要用于执行测试用例，并记录测试用例的执行结果。 ×">
+          <div class="qhead"><span class="num">第 90 题</span><span class="answer">×</span></div>
+          <div class="stem">判定表主要用于执行测试用例，并记录测试用例的执行结果。</div>
+        </article>
+
+        <article class="question" data-search="91 判定树主要用于执行测试用例，并记录测试用例的执行结果。 ×">
+          <div class="qhead"><span class="num">第 91 题</span><span class="answer">×</span></div>
+          <div class="stem">判定树主要用于执行测试用例，并记录测试用例的执行结果。</div>
+        </article>
+
+        <article class="question" data-search="92 过程设计语言 PDL 是一种用于描述功能模块的算法设计和加工细节的语言。 √">
+          <div class="qhead"><span class="num">第 92 题</span><span class="answer">√</span></div>
+          <div class="stem">过程设计语言 PDL 是一种用于描述功能模块的算法设计和加工细节的语言。</div>
+        </article>
+
+        <article class="question" data-search="93 JACKSON 图主要用于表示系统的静态结构和模块之间的关系。 ×">
+          <div class="qhead"><span class="num">第 93 题</span><span class="answer">×</span></div>
+          <div class="stem">JACKSON 图主要用于表示系统的静态结构和模块之间的关系。</div>
+        </article>
+
+        <article class="question" data-search="94 在程序流程图中，用标有名字的箭头表示控制流。 ×">
+          <div class="qhead"><span class="num">第 94 题</span><span class="answer">×</span></div>
+          <div class="stem">在程序流程图中，用标有名字的箭头表示控制流。</div>
+        </article>
+
+        <article class="question" data-search="95 McCabe 方法是一种主要用于度量程序性能的方法。 ×">
+          <div class="qhead"><span class="num">第 95 题</span><span class="answer">×</span></div>
+          <div class="stem">McCabe 方法是一种主要用于度量程序性能的方法。</div>
+        </article>
+
+        <article class="question" data-search="96 Halstead 方法主要用于度量程序的长度和体积，不涉及程序的复杂度度量。 ×">
+          <div class="qhead"><span class="num">第 96 题</span><span class="answer">×</span></div>
+          <div class="stem">Halstead 方法主要用于度量程序的长度和体积，不涉及程序的复杂度度量。</div>
+        </article>
+
+        <article class="question" data-search="97 程序路径复杂度仅受程序中 if 语句的数量影响，与其他控制结构如循环无关。 ×">
+          <div class="qhead"><span class="num">第 97 题</span><span class="answer">×</span></div>
+          <div class="stem">程序路径复杂度仅受程序中 if 语句的数量影响，与其他控制结构如循环无关。</div>
+        </article>
+
+        <article class="question" data-search="98 在 SQL 表格设计中，每个表格可以有多个主键。 ×">
+          <div class="qhead"><span class="num">第 98 题</span><span class="answer">×</span></div>
+          <div class="stem">在 SQL 表格设计中，每个表格可以有多个主键。</div>
+        </article>
+
+        <article class="question" data-search="99 在软件工程中，模块详细设计说明书通常包括对模块的输入和输出进行详细描述。 √">
+          <div class="qhead"><span class="num">第 99 题</span><span class="answer">√</span></div>
+          <div class="stem">在软件工程中，模块详细设计说明书通常包括对模块的输入和输出进行详细描述。</div>
+        </article>
+
+        <article class="question" data-search="100 需求文档中的用例规约主要包括用户需求描述。 ×">
+          <div class="qhead"><span class="num">第 100 题</span><span class="answer">×</span></div>
+          <div class="stem">需求文档中的用例规约主要包括用户需求描述。</div>
+        </article>
+
+        <article class="question" data-search="101 在软件工程中，系统总体方案确认阶段通常包括对系统的详细设计进行评审。 ×">
+          <div class="qhead"><span class="num">第 101 题</span><span class="answer">×</span></div>
+          <div class="stem">在软件工程中，系统总体方案确认阶段通常包括对系统的详细设计进行评审。</div>
+        </article>
+
+        <article class="question" data-search="102 在接口设计中，定义输入和输出格式有助于明确不同模块之间的通信方式。 √">
+          <div class="qhead"><span class="num">第 102 题</span><span class="answer">√</span></div>
+          <div class="stem">在接口设计中，定义输入和输出格式有助于明确不同模块之间的通信方式。</div>
+        </article>
+
+        <article class="question" data-search="103 在数据库设计中，范式的目标是提高数据库的性能。 ×">
+          <div class="qhead"><span class="num">第 103 题</span><span class="answer">×</span></div>
+          <div class="stem">在数据库设计中，范式的目标是提高数据库的性能。</div>
+        </article>
+
+        <article class="question" data-search="104 在系统性能设计中，吞吐量和响应时间是两个互相独立的性能指标。 ×">
+          <div class="qhead"><span class="num">第 104 题</span><span class="answer">×</span></div>
+          <div class="stem">在系统性能设计中，吞吐量和响应时间是两个互相独立的性能指标。</div>
+        </article>
+
+        <article class="question" data-search="105 在系统出错处理中，抛出异常是一种常见的错误处理方式。 √">
+          <div class="qhead"><span class="num">第 105 题</span><span class="answer">√</span></div>
+          <div class="stem">在系统出错处理中，抛出异常是一种常见的错误处理方式。</div>
+        </article>
+
+        <article class="question" data-search="106 在 C# 中，MDI 窗体是一种常见的用户界面设计模式，适用于需要同时打开和管
+理多个子窗体的场景。 √">
+          <div class="qhead"><span class="num">第 106 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，MDI 窗体是一种常见的用户界面设计模式，适用于需要同时打开和管
+理多个子窗体的场景。</div>
+        </article>
+
+        <article class="question" data-search="107 在 C# 中，设置 MDI 窗体的 IsMdiContainer 属性为 true 即可使该窗体成为
+MDI 容器窗体。 √">
+          <div class="qhead"><span class="num">第 107 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，设置 MDI 窗体的 IsMdiContainer 属性为 true 即可使该窗体成为
+MDI 容器窗体。</div>
+        </article>
+
+        <article class="question" data-search="108 在 C# 中，MDI 子窗体的排列方式可以通过设置 MDI 父窗体的属性来实现。 ×">
+          <div class="qhead"><span class="num">第 108 题</span><span class="answer">×</span></div>
+          <div class="stem">在 C# 中，MDI 子窗体的排列方式可以通过设置 MDI 父窗体的属性来实现。</div>
+        </article>
+
+        <article class="question" data-search="109 在 C# 中，窗体继承可以实现代码的复用和维护，但不支持多重继承。 √">
+          <div class="qhead"><span class="num">第 109 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，窗体继承可以实现代码的复用和维护，但不支持多重继承。</div>
+        </article>
+
+        <article class="question" data-search="110 在 C# 中，使用 MenuStrip 可以创建垂直排列的菜单。 √">
+          <div class="qhead"><span class="num">第 110 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，使用 MenuStrip 可以创建垂直排列的菜单。</div>
+        </article>
+
+        <article class="question" data-search="111 在 C# 中，ToolStrip 控件可以用于创建工具栏和状态栏。 ×">
+          <div class="qhead"><span class="num">第 111 题</span><span class="answer">×</span></div>
+          <div class="stem">在 C# 中，ToolStrip 控件可以用于创建工具栏和状态栏。</div>
+        </article>
+
+        <article class="question" data-search="112 在 C# 中，StatusStrip 控件用于创建状态栏，它通常位于窗体底部用于显示应
+用程序的状态信息。 √">
+          <div class="qhead"><span class="num">第 112 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，StatusStrip 控件用于创建状态栏，它通常位于窗体底部用于显示应
+用程序的状态信息。</div>
+        </article>
+
+        <article class="question" data-search="113 在 C# 中，ListView 控件支持多列显示，可以通过设置 View 属性为 Details 实
+现。 √">
+          <div class="qhead"><span class="num">第 113 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，ListView 控件支持多列显示，可以通过设置 View 属性为 Details 实
+现。</div>
+        </article>
+
+        <article class="question" data-search="114 在 C# 中，TreeView 控件的节点可以包含子节点，通过在父节点中添加子节点实
+现树状结构。 √">
+          <div class="qhead"><span class="num">第 114 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，TreeView 控件的节点可以包含子节点，通过在父节点中添加子节点实
+现树状结构。</div>
+        </article>
+
+        <article class="question" data-search="115 在 C# 中，DateTimePicker 控件可以用于选择日期和时间，但不能限制用户选择
+的日期范围。 ×">
+          <div class="qhead"><span class="num">第 115 题</span><span class="answer">×</span></div>
+          <div class="stem">在 C# 中，DateTimePicker 控件可以用于选择日期和时间，但不能限制用户选择
+的日期范围。</div>
+        </article>
+
+        <article class="question" data-search="116 在 C# 中，MonthCalendar 控件的 BoldedDates 属性用于指定日历中应该以粗体
+显示的日期。 √">
+          <div class="qhead"><span class="num">第 116 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，MonthCalendar 控件的 BoldedDates 属性用于指定日历中应该以粗体
+显示的日期。</div>
+        </article>
+
+        <article class="question" data-search="117 在 C# 中，PageSetupDialog 控件可以用于显示打印页面设置对话框，允许用户
+更改打印布局和外观。 √">
+          <div class="qhead"><span class="num">第 117 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，PageSetupDialog 控件可以用于显示打印页面设置对话框，允许用户
+更改打印布局和外观。</div>
+        </article>
+
+        <article class="question" data-search="118 在 C# 中，PrintDialog 控件用于显示打印对话框，允许用户选择打印机和配置
+打印任务的参数。 √">
+          <div class="qhead"><span class="num">第 118 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，PrintDialog 控件用于显示打印对话框，允许用户选择打印机和配置
+打印任务的参数。</div>
+        </article>
+
+        <article class="question" data-search="119 在 C# 中，PrintDocument 控件是用于控制打印任务的主要控件，通过它可以定
+义要打印的文档内容，并在 PrintPage 事件中进行
+绘制。 √">
+          <div class="qhead"><span class="num">第 119 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，PrintDocument 控件是用于控制打印任务的主要控件，通过它可以定
+义要打印的文档内容，并在 PrintPage 事件中进行
+绘制。</div>
+        </article>
+
+        <article class="question" data-search="120 在 C# 中，PrintPreviewControl 控件是用来设置打印的文档。 ×">
+          <div class="qhead"><span class="num">第 120 题</span><span class="answer">×</span></div>
+          <div class="stem">在 C# 中，PrintPreviewControl 控件是用来设置打印的文档。</div>
+        </article>
+
+        <article class="question" data-search="121 在 C# 中，PrintPreviewDialog 控件用于显示打印预览对话框，可以通过关联
+PrintDocument 控件来显示要打印的文档内容的预览。 √">
+          <div class="qhead"><span class="num">第 121 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，PrintPreviewDialog 控件用于显示打印预览对话框，可以通过关联
+PrintDocument 控件来显示要打印的文档内容的预览。</div>
+        </article>
+
+        <article class="question" data-search="122 DataSet 是 ADO.NET 中的一个核心对象，用于在内存中存储数据，可以离线操作
+数据并支持多表数据关系。 √">
+          <div class="qhead"><span class="num">第 122 题</span><span class="answer">√</span></div>
+          <div class="stem">DataSet 是 ADO.NET 中的一个核心对象，用于在内存中存储数据，可以离线操作
+数据并支持多表数据关系。</div>
+        </article>
+
+        <article class="question" data-search="123 在 ADO.NET 中，Connection 对象用于表示与数据库的物理连接，通过
+Connection 对象可以打开或关闭与数据库的连接，并执行相应的数据库操作。 ×">
+          <div class="qhead"><span class="num">第 123 题</span><span class="answer">×</span></div>
+          <div class="stem">在 ADO.NET 中，Connection 对象用于表示与数据库的物理连接，通过
+Connection 对象可以打开或关闭与数据库的连接，并执行相应的数据库操作。</div>
+        </article>
+
+        <article class="question" data-search="124 在 ADO.NET 中，Connection 对象的 Open 方法用于打开与数据库的连接，而
+Close 方法用于关闭与数据库的连接。 √">
+          <div class="qhead"><span class="num">第 124 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，Connection 对象的 Open 方法用于打开与数据库的连接，而
+Close 方法用于关闭与数据库的连接。</div>
+        </article>
+
+        <article class="question" data-search="125 在 ADO.NET 中，Command 对象用于表示与数据库执行的命令，可以执行查询和非
+查询操作，并通过 CommandSql 属性指定要执行的 SQL 语句。 ×">
+          <div class="qhead"><span class="num">第 125 题</span><span class="answer">×</span></div>
+          <div class="stem">在 ADO.NET 中，Command 对象用于表示与数据库执行的命令，可以执行查询和非
+查询操作，并通过 CommandSql 属性指定要执行的 SQL 语句。</div>
+        </article>
+
+        <article class="question" data-search="126 在 ADO.NET 中，Command 对象的 ExecuteScalar 方法用于执行 SQL 查询语句，
+并返回结果集的第一行第一列的值。 √">
+          <div class="qhead"><span class="num">第 126 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，Command 对象的 ExecuteScalar 方法用于执行 SQL 查询语句，
+并返回结果集的第一行第一列的值。</div>
+        </article>
+
+        <article class="question" data-search="127 在 ADO.NET 中，DataReader 对象是一种只读、向前的数据流，用于从数据库中
+读取数据，支持对查询结果的逐行读取。 √">
+          <div class="qhead"><span class="num">第 127 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，DataReader 对象是一种只读、向前的数据流，用于从数据库中
+读取数据，支持对查询结果的逐行读取。</div>
+        </article>
+
+        <article class="question" data-search="128 在 ADO.NET 中，DataReader 对象的 Read 方法用于向前移动到下一行数据，并
+返回一个布尔值，表示是否存在下一行数据。 √">
+          <div class="qhead"><span class="num">第 128 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，DataReader 对象的 Read 方法用于向前移动到下一行数据，并
+返回一个布尔值，表示是否存在下一行数据。</div>
+        </article>
+
+        <article class="question" data-search="129 在 ADO.NET 中，DataAdapter 对象充当数据源与数据目标之间的桥梁，通过
+SelectCommand 执行查询操作，通过 Set 方法将查询结果填充到 DataSet 中。 ×">
+          <div class="qhead"><span class="num">第 129 题</span><span class="answer">×</span></div>
+          <div class="stem">在 ADO.NET 中，DataAdapter 对象充当数据源与数据目标之间的桥梁，通过
+SelectCommand 执行查询操作，通过 Set 方法将查询结果填充到 DataSet 中。</div>
+        </article>
+
+        <article class="question" data-search="130 在 ADO.NET 中，DataAdapter 对象的 Update 方法用于将 DataSet 中的数据更
+新到数据库，包括插入、更新和删除操作。 √">
+          <div class="qhead"><span class="num">第 130 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，DataAdapter 对象的 Update 方法用于将 DataSet 中的数据更
+新到数据库，包括插入、更新和删除操作。</div>
+        </article>
+
+        <article class="question" data-search="131 在 ADO.NET 中，DataSet 对象是一个内存中的数据容器，可以存储多个数据表，
+并通过 DataRelation 定义表之间的关系。 √">
+          <div class="qhead"><span class="num">第 131 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，DataSet 对象是一个内存中的数据容器，可以存储多个数据表，
+并通过 DataRelation 定义表之间的关系。</div>
+        </article>
+
+        <article class="question" data-search="132 在 ADO.NET 中，DataGridView 数据控件是 Windows 窗体应用程序中常用的数据
+显示和编辑控件，可以与数据源绑定，实现数据的显示和用户的交互操作。 √">
+          <div class="qhead"><span class="num">第 132 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，DataGridView 数据控件是 Windows 窗体应用程序中常用的数据
+显示和编辑控件，可以与数据源绑定，实现数据的显示和用户的交互操作。</div>
+        </article>
+
+        <article class="question" data-search="133 在 ADO.NET 中，通过 DataGridView 控件显示数据时，可以通过设置 Columns 的
+Visiblity 属性来控制列的可见性。 ×">
+          <div class="qhead"><span class="num">第 133 题</span><span class="answer">×</span></div>
+          <div class="stem">在 ADO.NET 中，通过 DataGridView 控件显示数据时，可以通过设置 Columns 的
+Visiblity 属性来控制列的可见性。</div>
+        </article>
+
+        <article class="question" data-search="134 在 ADO.NET 中，通过 DataGridView 控件删除行时，可以使用 Rows.Remove 方
+法，也可以使用 Rows.RemoveAt 方法，两者功能相同。 √">
+          <div class="qhead"><span class="num">第 134 题</span><span class="answer">√</span></div>
+          <div class="stem">在 ADO.NET 中，通过 DataGridView 控件删除行时，可以使用 Rows.Remove 方
+法，也可以使用 Rows.RemoveAt 方法，两者功能相同。</div>
+        </article>
+
+        <article class="question" data-search="135 在 C# 中，File 类提供了一组静态方法，用于对文件进行操作，包括判断文件是
+否存在、创建新文件、删除文件等。 √">
+          <div class="qhead"><span class="num">第 135 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，File 类提供了一组静态方法，用于对文件进行操作，包括判断文件是
+否存在、创建新文件、删除文件等。</div>
+        </article>
+
+        <article class="question" data-search="136 在 C# 中，Directory 类提供了一组静态方法，用于对目录进行操作，包括判断
+目录是否存在、创建新目录、删除目录等。 √">
+          <div class="qhead"><span class="num">第 136 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，Directory 类提供了一组静态方法，用于对目录进行操作，包括判断
+目录是否存在、创建新目录、删除目录等。</div>
+        </article>
+
+        <article class="question" data-search="137 在 C# 中，FileInfo 类中的 IsExists 属性用来获取指示文件是否存在。 ×">
+          <div class="qhead"><span class="num">第 137 题</span><span class="answer">×</span></div>
+          <div class="stem">在 C# 中，FileInfo 类中的 IsExists 属性用来获取指示文件是否存在。</div>
+        </article>
+
+        <article class="question" data-search="138 在 C# 中，DirectoryInfo 类提供了一些方法和属性，用于获取目录的各种信息，
+包括创建时间、文件数量、子目录数量等。 √">
+          <div class="qhead"><span class="num">第 138 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，DirectoryInfo 类提供了一些方法和属性，用于获取目录的各种信息，
+包括创建时间、文件数量、子目录数量等。</div>
+        </article>
+
+        <article class="question" data-search="139 在 C# 中，当 File 类去调用 create() 方法时，如果路径为空，或文件夹为只
+读，则方法会引发异常。 √">
+          <div class="qhead"><span class="num">第 139 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，当 File 类去调用 create() 方法时，如果路径为空，或文件夹为只
+读，则方法会引发异常。</div>
+        </article>
+
+        <article class="question" data-search="140 在 C# 中，Directory 类提供了用于创建、删除和获取文件夹下文件列表的方法。 √">
+          <div class="qhead"><span class="num">第 140 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，Directory 类提供了用于创建、删除和获取文件夹下文件列表的方法。</div>
+        </article>
+
+        <article class="question" data-search="141 在 C# 中，数据流提供了对字节序列的抽象，可用于读取和写入字节数据，是进
+行文件、网络等 I/O 操作的基础。 √">
+          <div class="qhead"><span class="num">第 141 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，数据流提供了对字节序列的抽象，可用于读取和写入字节数据，是进
+行文件、网络等 I/O 操作的基础。</div>
+        </article>
+
+        <article class="question" data-search="142 在 C# 中，FileStream 类继承自 System.IO 类。 ×">
+          <div class="qhead"><span class="num">第 142 题</span><span class="answer">×</span></div>
+          <div class="stem">在 C# 中，FileStream 类继承自 System.IO 类。</div>
+        </article>
+
+        <article class="question" data-search="143 在 C# 中，StreamWriter 类用于写入文本文件，通过构造方法指定文件路径和是
+否追加写入，提供了 Write、WriteLine 等方法进行文本写入操作。 √">
+          <div class="qhead"><span class="num">第 143 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，StreamWriter 类用于写入文本文件，通过构造方法指定文件路径和是
+否追加写入，提供了 Write、WriteLine 等方法进行文本写入操作。</div>
+        </article>
+
+        <article class="question" data-search="144 C# 中的 StreamReader 类是专门用来处理文本文件的类，可以方便地向文本文件
+中写入字符串。 ×">
+          <div class="qhead"><span class="num">第 144 题</span><span class="answer">×</span></div>
+          <div class="stem">C# 中的 StreamReader 类是专门用来处理文本文件的类，可以方便地向文本文件
+中写入字符串。</div>
+        </article>
+
+        <article class="question" data-search="145 在 C# 中，BinaryWriter 类和 BinaryReader 类分别用于以二进制形式写入和读
+取数据。(
+(
+)它们提供了一系列的 Write 和 Read 方法，支持写入和读取不同数据类型。
+) √">
+          <div class="qhead"><span class="num">第 145 题</span><span class="answer">√</span></div>
+          <div class="stem">在 C# 中，BinaryWriter 类和 BinaryReader 类分别用于以二进制形式写入和读
+取数据。(
+(
+)它们提供了一系列的 Write 和 Read 方法，支持写入和读取不同数据类型。
+)</div>
+        </article>
+
+        <article class="question" data-search="146 数据库的设计目标之一是保证数据的一致性、完整性和安全性。 √">
+          <div class="qhead"><span class="num">第 146 题</span><span class="answer">√</span></div>
+          <div class="stem">数据库的设计目标之一是保证数据的一致性、完整性和安全性。</div>
+        </article>
+
+        <article class="question" data-search="147 在 MySQL 中，创建数据库时可以指定字符集和校对规则。 √">
+          <div class="qhead"><span class="num">第 147 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，创建数据库时可以指定字符集和校对规则。</div>
+        </article>
+
+        <article class="question" data-search="148 在 MySQL 中，使用 SHOW TABLE STATUS 命令可以查看表的状态信息，包括行数、
+平均行长度等。 √">
+          <div class="qhead"><span class="num">第 148 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 SHOW TABLE STATUS 命令可以查看表的状态信息，包括行数、
+平均行长度等。</div>
+        </article>
+
+        <article class="question" data-search="149 在 MySQL 中，使用 ALTER DATABASE 命令可以修改数据库的字符集和校对规则。 √">
+          <div class="qhead"><span class="num">第 149 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 ALTER DATABASE 命令可以修改数据库的字符集和校对规则。</div>
+        </article>
+
+        <article class="question" data-search="150 在 MySQL 中，使用 DROP TABLE 命令删除表时，将同时删除表的结构和数据。 √">
+          <div class="qhead"><span class="num">第 150 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 DROP TABLE 命令删除表时，将同时删除表的结构和数据。</div>
+        </article>
+
+        <article class="question" data-search="151 在 MySQL 中，使用 CREATE TABLE 命令创建表时，如果不指定存储引擎，系统会
+使用默认的存储引擎。 √">
+          <div class="qhead"><span class="num">第 151 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 CREATE TABLE 命令创建表时，如果不指定存储引擎，系统会
+使用默认的存储引擎。</div>
+        </article>
+
+        <article class="question" data-search="152 在 MySQL 中，CHAR 和 VARCHAR 都是用于存储字符串类型数据的数据类型，它们
+之间的主要区别是 CHAR 是固定长度的，而 VARCHAR 是可变长度的。 √">
+          <div class="qhead"><span class="num">第 152 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，CHAR 和 VARCHAR 都是用于存储字符串类型数据的数据类型，它们
+之间的主要区别是 CHAR 是固定长度的，而 VARCHAR 是可变长度的。</div>
+        </article>
+
+        <article class="question" data-search="153 在 MySQL 数据库中，DESC 与 DESCRIBE 两者用法相同，都是用来显示已经建立
+的数据表文件。 √">
+          <div class="qhead"><span class="num">第 153 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 数据库中，DESC 与 DESCRIBE 两者用法相同，都是用来显示已经建立
+的数据表文件。</div>
+        </article>
+
+        <article class="question" data-search="154 在 MySQL 中，使用 MODIFY 关键字可以修改表的主键。 ×">
+          <div class="qhead"><span class="num">第 154 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 MODIFY 关键字可以修改表的主键。</div>
+        </article>
+
+        <article class="question" data-search="155 在 MySQL 中，使用 DROP TABLE 命令删除表时，将同时删除表的结构和数据。 √">
+          <div class="qhead"><span class="num">第 155 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 DROP TABLE 命令删除表时，将同时删除表的结构和数据。</div>
+        </article>
+
+        <article class="question" data-search="156 在 MySQL 中，外键约束用于定义表与表之间的关系，确保一个表的外键值在另一
+个表的主键值中存在。 √">
+          <div class="qhead"><span class="num">第 156 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，外键约束用于定义表与表之间的关系，确保一个表的外键值在另一
+个表的主键值中存在。</div>
+        </article>
+
+        <article class="question" data-search="157 在 MySQL 中，插入数据时，如果不指定插入的列，系统将插入数据到表的所有列
+中。 √">
+          <div class="qhead"><span class="num">第 157 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，插入数据时，如果不指定插入的列，系统将插入数据到表的所有列
+中。</div>
+        </article>
+
+        <article class="question" data-search="158 在 MySQL 中，使用 LIMIT 关键字限制查询结果的行数时，可以指定起始行和结
+束行。 ×">
+          <div class="qhead"><span class="num">第 158 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 LIMIT 关键字限制查询结果的行数时，可以指定起始行和结
+束行。</div>
+        </article>
+
+        <article class="question" data-search="159 在 MySQL 中，通配符只能用于文本类型的列，不能用于数值或日期类型的列。 ×">
+          <div class="qhead"><span class="num">第 159 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，通配符只能用于文本类型的列，不能用于数值或日期类型的列。</div>
+        </article>
+
+        <article class="question" data-search="160 在 MySQL 中，DISTINCT 关键字只能用于文本类型的列，不能用于数值或日期类
+型的列。 ×">
+          <div class="qhead"><span class="num">第 160 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，DISTINCT 关键字只能用于文本类型的列，不能用于数值或日期类
+型的列。</div>
+        </article>
+
+        <article class="question" data-search="161 在 MySQL 中，使用 AND 关键字连接多个条件时，所有条件都必须同时满足才会
+被包含在查询结果中。 √">
+          <div class="qhead"><span class="num">第 161 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 AND 关键字连接多个条件时，所有条件都必须同时满足才会
+被包含在查询结果中。</div>
+        </article>
+
+        <article class="question" data-search="162 在 MySQL 中，使用 TOP 关键字可以实现对查询结果的行数限制。 ×">
+          <div class="qhead"><span class="num">第 162 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 TOP 关键字可以实现对查询结果的行数限制。</div>
+        </article>
+
+        <article class="question" data-search="163 在 MySQL 中，使用 ＜＞ 运算符可以判断两个值是否相等。 ×">
+          <div class="qhead"><span class="num">第 163 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 ＜＞ 运算符可以判断两个值是否相等。</div>
+        </article>
+
+        <article class="question" data-search="164 在 MySQL 中，使用 ORDER BY 关键字对查询结果排序时，可以同时指定多个列，
+按照列的顺序进行排序。 √">
+          <div class="qhead"><span class="num">第 164 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 ORDER BY 关键字对查询结果排序时，可以同时指定多个列，
+按照列的顺序进行排序。</div>
+        </article>
+
+        <article class="question" data-search="165 SQL 标准要求 HAVING 必须引用 GROUP BY 子句中的行或用于聚合函数中的行。 √">
+          <div class="qhead"><span class="num">第 165 题</span><span class="answer">√</span></div>
+          <div class="stem">SQL 标准要求 HAVING 必须引用 GROUP BY 子句中的行或用于聚合函数中的行。</div>
+        </article>
+
+        <article class="question" data-search="166 在 MySQL 中，使用 UNION ALL 关键字进行联合查询时，会返回所有匹配的行，
+包括重复的行。 √">
+          <div class="qhead"><span class="num">第 166 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，使用 UNION ALL 关键字进行联合查询时，会返回所有匹配的行，
+包括重复的行。</div>
+        </article>
+
+        <article class="question" data-search="167 在 MySQL 中，可以在 WHERE 子句中使用聚合函数对分组前的数据进行过滤。 ×">
+          <div class="qhead"><span class="num">第 167 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，可以在 WHERE 子句中使用聚合函数对分组前的数据进行过滤。</div>
+        </article>
+
+        <article class="question" data-search="168 在 MySQL 中，可以在 HAVING 子句中使用聚合函数对分组后的数据进行过滤。 √">
+          <div class="qhead"><span class="num">第 168 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，可以在 HAVING 子句中使用聚合函数对分组后的数据进行过滤。</div>
+        </article>
+
+        <article class="question" data-search="169 在 MySQL 中，使用 UPDATE 语句更新数据时，必须总是提供 WHERE 子句，以避
+免全表更新。 ×">
+          <div class="qhead"><span class="num">第 169 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 UPDATE 语句更新数据时，必须总是提供 WHERE 子句，以避
+免全表更新。</div>
+        </article>
+
+        <article class="question" data-search="170 在 MySQL 中，UPDATE 语句的 WHERE 子句是可选的，如果不提供条件，则会更新
+表中所有行的数据。 √">
+          <div class="qhead"><span class="num">第 170 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，UPDATE 语句的 WHERE 子句是可选的，如果不提供条件，则会更新
+表中所有行的数据。</div>
+        </article>
+
+        <article class="question" data-search="171 在 MySQL 中，TRUNCATE 语句和 DELETE 语句的作用是相同的，都用于删除表中
+的数据。 ×">
+          <div class="qhead"><span class="num">第 171 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，TRUNCATE 语句和 DELETE 语句的作用是相同的，都用于删除表中
+的数据。</div>
+        </article>
+
+        <article class="question" data-search="172 在 MySQL 中，使用 TRUNCATE TABLE 语句在功能上与使用 WHERE 子句的 DELETE
+语句在功能上是相同的。 ×">
+          <div class="qhead"><span class="num">第 172 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 TRUNCATE TABLE 语句在功能上与使用 WHERE 子句的 DELETE
+语句在功能上是相同的。</div>
+        </article>
+
+        <article class="question" data-search="173 在 MySQL 中，ROUND() 函数可以用于将一个数值四舍五入到指定的小数位数。 √">
+          <div class="qhead"><span class="num">第 173 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，ROUND() 函数可以用于将一个数值四舍五入到指定的小数位数。</div>
+        </article>
+
+        <article class="question" data-search="174 在 MySQL 中，TRIM() 函数用于删除字符串两端的空格。 √">
+          <div class="qhead"><span class="num">第 174 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，TRIM() 函数用于删除字符串两端的空格。</div>
+        </article>
+
+        <article class="question" data-search="175 在 MySQL 中，DATE_FORMAT()函数用于将日期按照指定的格式输出。 √">
+          <div class="qhead"><span class="num">第 175 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，DATE_FORMAT()函数用于将日期按照指定的格式输出。</div>
+        </article>
+
+        <article class="question" data-search="176 IF() 函数可以用于在 MySQL 中进行简单的条件判断，类似于其他编程语言中的
+if-else 语句。 √">
+          <div class="qhead"><span class="num">第 176 题</span><span class="answer">√</span></div>
+          <div class="stem">IF() 函数可以用于在 MySQL 中进行简单的条件判断，类似于其他编程语言中的
+if-else 语句。</div>
+        </article>
+
+        <article class="question" data-search="177 在 MySQL 中，使用 INNER JOIN 关键字和使用 CROSS JOIN 关键字可以得到相同
+的结果。 ×">
+          <div class="qhead"><span class="num">第 177 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 INNER JOIN 关键字和使用 CROSS JOIN 关键字可以得到相同
+的结果。</div>
+        </article>
+
+        <article class="question" data-search="178 在 MySQL 中，内连接是系统默认的，可以省略 INNER 关键字。 √">
+          <div class="qhead"><span class="num">第 178 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，内连接是系统默认的，可以省略 INNER 关键字。</div>
+        </article>
+
+        <article class="question" data-search="179 在 MySQL 中，使用 RIGHT JOIN 关键字和使用 LEFT JOIN 执行右外连接可以得
+到相同的结果。 ×">
+          <div class="qhead"><span class="num">第 179 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，使用 RIGHT JOIN 关键字和使用 LEFT JOIN 执行右外连接可以得
+到相同的结果。</div>
+        </article>
+
+        <article class="question" data-search="180 在 MySQL 中，交叉连接的结果集行数等于两个表的行数的乘积。 √">
+          <div class="qhead"><span class="num">第 180 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，交叉连接的结果集行数等于两个表的行数的乘积。</div>
+        </article>
+
+        <article class="question" data-search="181 在 MySQL 自连接中，通常需要使用表别名来区分同一表的不同列。 √">
+          <div class="qhead"><span class="num">第 181 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 自连接中，通常需要使用表别名来区分同一表的不同列。</div>
+        </article>
+
+        <article class="question" data-search="182 MySQL 在 WHERE 子句中应用子查询时，子查询的结果必须是单一值。 ×">
+          <div class="qhead"><span class="num">第 182 题</span><span class="answer">×</span></div>
+          <div class="stem">MySQL 在 WHERE 子句中应用子查询时，子查询的结果必须是单一值。</div>
+        </article>
+
+        <article class="question" data-search="183 MySQL 在 FROM 子句中应用子查询时，可以直接在 SELECT 语句中嵌套使用多个
+子查询。 √">
+          <div class="qhead"><span class="num">第 183 题</span><span class="answer">√</span></div>
+          <div class="stem">MySQL 在 FROM 子句中应用子查询时，可以直接在 SELECT 语句中嵌套使用多个
+子查询。</div>
+        </article>
+
+        <article class="question" data-search="184 在 MySQL 中，相关子查询可以独立于外部查询而存在。 ×">
+          <div class="qhead"><span class="num">第 184 题</span><span class="answer">×</span></div>
+          <div class="stem">在 MySQL 中，相关子查询可以独立于外部查询而存在。</div>
+        </article>
+
+        <article class="question" data-search="185 在 MySQL 中，EXISTS 运算符可以替代 IN 运算符，用于检查子查询的结果是否
+包含特定。 √">
+          <div class="qhead"><span class="num">第 185 题</span><span class="answer">√</span></div>
+          <div class="stem">在 MySQL 中，EXISTS 运算符可以替代 IN 运算符，用于检查子查询的结果是否
+包含特定。</div>
+        </article>
+
+        <article class="question" data-search="186 HTML5 是一种用于创建网页的编程语言。 ×">
+          <div class="qhead"><span class="num">第 186 题</span><span class="answer">×</span></div>
+          <div class="stem">HTML5 是一种用于创建网页的编程语言。</div>
+        </article>
+
+        <article class="question" data-search="187 HTML5 头部文档中的 ＜head＞ 标记用于显示网页的主要内容。 ×">
+          <div class="qhead"><span class="num">第 187 题</span><span class="answer">×</span></div>
+          <div class="stem">HTML5 头部文档中的 ＜head＞ 标记用于显示网页的主要内容。</div>
+        </article>
+
+        <article class="question" data-search="188 HTML5 中的 ＜div＞ 标签用于定义一个链接。 ×">
+          <div class="qhead"><span class="num">第 188 题</span><span class="answer">×</span></div>
+          <div class="stem">HTML5 中的 ＜div＞ 标签用于定义一个链接。</div>
+        </article>
+
+        <article class="question" data-search="189 HTML5 的 ＜aside＞ 元素用于定义主要内容之外的内容，如侧边栏或广告。 √">
+          <div class="qhead"><span class="num">第 189 题</span><span class="answer">√</span></div>
+          <div class="stem">HTML5 的 ＜aside＞ 元素用于定义主要内容之外的内容，如侧边栏或广告。</div>
+        </article>
+
+        <article class="question" data-search="190 HTML5 的绘图元素 ＜canvas＞ 可以用于创建 3D 图形。 √">
+          <div class="qhead"><span class="num">第 190 题</span><span class="answer">√</span></div>
+          <div class="stem">HTML5 的绘图元素 ＜canvas＞ 可以用于创建 3D 图形。</div>
+        </article>
+
+        <article class="question" data-search="191 HTML5 的 ＜iframe＞ 标签可用于嵌入多媒体内容，如视频或音频。 ×">
+          <div class="qhead"><span class="num">第 191 题</span><span class="answer">×</span></div>
+          <div class="stem">HTML5 的 ＜iframe＞ 标签可用于嵌入多媒体内容，如视频或音频。</div>
+        </article>
+
+        <article class="question" data-search="192 HTML5 的表单元素中，＜button＞ 标签用于创建复选框。 ×">
+          <div class="qhead"><span class="num">第 192 题</span><span class="answer">×</span></div>
+          <div class="stem">HTML5 的表单元素中，＜button＞ 标签用于创建复选框。</div>
+        </article>
+
+        <article class="question" data-search="193 HTML5 中的新输入类型“color”用于接受用户输入的颜色值。 √">
+          <div class="qhead"><span class="num">第 193 题</span><span class="answer">√</span></div>
+          <div class="stem">HTML5 中的新输入类型“color”用于接受用户输入的颜色值。</div>
+        </article>
+
+        <article class="question" data-search="194 HTML5 中的拖放 API 允许开发者实现元素的拖动和释放。 √">
+          <div class="qhead"><span class="num">第 194 题</span><span class="answer">√</span></div>
+          <div class="stem">HTML5 中的拖放 API 允许开发者实现元素的拖动和释放。</div>
+        </article>
+
+        <article class="question" data-search="195 HTML5 中 localStorage 比 sessionStorage 的存储容量更大。 ×">
+          <div class="qhead"><span class="num">第 195 题</span><span class="answer">×</span></div>
+          <div class="stem">HTML5 中 localStorage 比 sessionStorage 的存储容量更大。</div>
+        </article>
+
+        <article class="question" data-search="196 CSS3 的 transition 属性用于定义页面元素的布局。 ×">
+          <div class="qhead"><span class="num">第 196 题</span><span class="answer">×</span></div>
+          <div class="stem">CSS3 的 transition 属性用于定义页面元素的布局。</div>
+        </article>
+
+        <article class="question" data-search="197 CSS3 中的伪元素选择器 ::before 用于选择元素的第一个子元素。 ×">
+          <div class="qhead"><span class="num">第 197 题</span><span class="answer">×</span></div>
+          <div class="stem">CSS3 中的伪元素选择器 ::before 用于选择元素的第一个子元素。</div>
+        </article>
+
+        <article class="question" data-search="198 CSS3 中兄弟选择器“~”可以选择所有兄弟元素，而不仅仅是相邻的兄弟元素。 √">
+          <div class="qhead"><span class="num">第 198 题</span><span class="answer">√</span></div>
+          <div class="stem">CSS3 中兄弟选择器“~”可以选择所有兄弟元素，而不仅仅是相邻的兄弟元素。</div>
+        </article>
+
+        <article class="question" data-search="199 CSS3 中的属性选择器可以同时选择多个属性具有相同值的元素。 √">
+          <div class="qhead"><span class="num">第 199 题</span><span class="answer">√</span></div>
+          <div class="stem">CSS3 中的属性选择器可以同时选择多个属性具有相同值的元素。</div>
+        </article>
+
+        <article class="question" data-search="200 CSS3 中的 :empty 伪类选择器用于选中没有子元素的元素。 √">
+          <div class="qhead"><span class="num">第 200 题</span><span class="answer">√</span></div>
+          <div class="stem">CSS3 中的 :empty 伪类选择器用于选中没有子元素的元素。</div>
+        </article>
+
+        <article class="question" data-search="201 CSS3 中的 text-transform: uppercase; 用于将文本转换为大写。 √">
+          <div class="qhead"><span class="num">第 201 题</span><span class="answer">√</span></div>
+          <div class="stem">CSS3 中的 text-transform: uppercase; 用于将文本转换为大写。</div>
+        </article>
+
+        <article class="question" data-search="202 在 CSS3 盒模型中，box-sizing: border-box; 可以使元素的宽度和高度包括边
+框和内边距。 √">
+          <div class="qhead"><span class="num">第 202 题</span><span class="answer">√</span></div>
+          <div class="stem">在 CSS3 盒模型中，box-sizing: border-box; 可以使元素的宽度和高度包括边
+框和内边距。</div>
+        </article>
+
+        <article class="question" data-search="203 在弹性盒布局中，如果一个项目的 flex-grow 属性值为 0，表示该项目不会扩展。 √">
+          <div class="qhead"><span class="num">第 203 题</span><span class="answer">√</span></div>
+          <div class="stem">在弹性盒布局中，如果一个项目的 flex-grow 属性值为 0，表示该项目不会扩展。</div>
+        </article>
+
+        <article class="question" data-search="204 在 CSS3 中，径向渐变中圆心坐标的默认值是 center。 √">
+          <div class="qhead"><span class="num">第 204 题</span><span class="answer">√</span></div>
+          <div class="stem">在 CSS3 中，径向渐变中圆心坐标的默认值是 center。</div>
+        </article>
+
+        <article class="question" data-search="205 在 CSS3 动画中，animation-iteration-count 属性用于设置动画的播放次数，
+值为 infinite 表示无限循环播放。 √">
+          <div class="qhead"><span class="num">第 205 题</span><span class="answer">√</span></div>
+          <div class="stem">在 CSS3 动画中，animation-iteration-count 属性用于设置动画的播放次数，
+值为 infinite 表示无限循环播放。</div>
+        </article>
+
+        <article class="question" data-search="206 jQuery 是一种后端编程语言。 ×">
+          <div class="qhead"><span class="num">第 206 题</span><span class="answer">×</span></div>
+          <div class="stem">jQuery 是一种后端编程语言。</div>
+        </article>
+
+        <article class="question" data-search="207 在 jQuery 中，选择器 :first-child 用于选中第一个子元素。 √">
+          <div class="qhead"><span class="num">第 207 题</span><span class="answer">√</span></div>
+          <div class="stem">在 jQuery 中，选择器 :first-child 用于选中第一个子元素。</div>
+        </article>
+
+        <article class="question" data-search="208 在 jQuery 中，事件方法 mouseenter 会在鼠标指针穿过被选元素时触发。 √">
+          <div class="qhead"><span class="num">第 208 题</span><span class="answer">√</span></div>
+          <div class="stem">在 jQuery 中，事件方法 mouseenter 会在鼠标指针穿过被选元素时触发。</div>
+        </article>
+
+        <article class="question" data-search="209 在 jQuery 中，使用 css() 方法用于在 jQuery 中设置元素的内联样式。 √">
+          <div class="qhead"><span class="num">第 209 题</span><span class="answer">√</span></div>
+          <div class="stem">在 jQuery 中，使用 css() 方法用于在 jQuery 中设置元素的内联样式。</div>
+        </article>
+
+        <article class="question" data-search="210 在 jQuery 中，deleteAttr() 方法用于删除元素的指定属性。 ×">
+          <div class="qhead"><span class="num">第 210 题</span><span class="answer">×</span></div>
+          <div class="stem">在 jQuery 中，deleteAttr() 方法用于删除元素的指定属性。</div>
+        </article>
+
+        <article class="question" data-search="211 在 jQuery 中，wrap() 方法用于将指定的 HTML 结构包裹在每个匹配元素的外
+部。 √">
+          <div class="qhead"><span class="num">第 211 题</span><span class="answer">√</span></div>
+          <div class="stem">在 jQuery 中，wrap() 方法用于将指定的 HTML 结构包裹在每个匹配元素的外
+部。</div>
+        </article>
+
+        <article class="question" data-search="212 在 jQuery 中，clone() 方法用于复制元素及其所有子节点，包括事件处理程序。 ×">
+          <div class="qhead"><span class="num">第 212 题</span><span class="answer">×</span></div>
+          <div class="stem">在 jQuery 中，clone() 方法用于复制元素及其所有子节点，包括事件处理程序。</div>
+        </article>
+
+        <article class="question" data-search="213 在 jQuery 中，通过 focus 方法可以用来为元素绑定失去焦点事件。 ×">
+          <div class="qhead"><span class="num">第 213 题</span><span class="answer">×</span></div>
+          <div class="stem">在 jQuery 中，通过 focus 方法可以用来为元素绑定失去焦点事件。</div>
+        </article>
+
+        <article class="question" data-search="214 事件冒泡的事件传播的方向是从触发事件的元素到最顶层，类似于水泡从水底浮
+上来一般。 √">
+          <div class="qhead"><span class="num">第 214 题</span><span class="answer">√</span></div>
+          <div class="stem">事件冒泡的事件传播的方向是从触发事件的元素到最顶层，类似于水泡从水底浮
+上来一般。</div>
+        </article>
+
+        <article class="question" data-search="215 在 jQuery 中使用 .animate() 方法可以创建自定义动画。 √">
+          <div class="qhead"><span class="num">第 215 题</span><span class="answer">√</span></div>
+          <div class="stem">在 jQuery 中使用 .animate() 方法可以创建自定义动画。</div>
+        </article>
+
+        <article class="question" data-search="216 在 jQuery 中，animate 方法的参数可以只传入第一个参数，表示元素执行动画
+动作的目标样式，默认按照 400 毫秒执行动画。 √">
+          <div class="qhead"><span class="num">第 216 题</span><span class="answer">√</span></div>
+          <div class="stem">在 jQuery 中，animate 方法的参数可以只传入第一个参数，表示元素执行动画
+动作的目标样式，默认按照 400 毫秒执行动画。</div>
+        </article>
+
+        <article class="question" data-search="217 Ajax 这个术语源自描述从基于 Web 的应用到基于数据的应用，它是一种新的编
+程语言。 ×">
+          <div class="qhead"><span class="num">第 217 题</span><span class="answer">×</span></div>
+          <div class="stem">Ajax 这个术语源自描述从基于 Web 的应用到基于数据的应用，它是一种新的编
+程语言。</div>
+        </article>
+
+        <article class="question" data-search="218 在 JavaScript 中，当 XMLHttpRequest 对象的 readyState 属性值为 3 时，表
+示请求已完成且响应已准备就绪。 ×">
+          <div class="qhead"><span class="num">第 218 题</span><span class="answer">×</span></div>
+          <div class="stem">在 JavaScript 中，当 XMLHttpRequest 对象的 readyState 属性值为 3 时，表
+示请求已完成且响应已准备就绪。</div>
+        </article>
+
+        <article class="question" data-search="219 在 Ajax 工作流程中，onreadystatechange 事件用于监听 XMLHttpRequest 对象
+的状态变化。 √">
+          <div class="qhead"><span class="num">第 219 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Ajax 工作流程中，onreadystatechange 事件用于监听 XMLHttpRequest 对象
+的状态变化。</div>
+        </article>
+
+        <article class="question" data-search="220 Ajax 中的 async 选项用于设置请求是否为同步请求，值为 true 表示同步，值
+为 false 表示异步。 ×">
+          <div class="qhead"><span class="num">第 220 题</span><span class="answer">×</span></div>
+          <div class="stem">Ajax 中的 async 选项用于设置请求是否为同步请求，值为 true 表示同步，值
+为 false 表示异步。</div>
+        </article>
+
+        <article class="question" data-search="221 在 Ajax 中，如果服务器返回的响应状态码为 404，表示请求资源未找到。 √">
+          <div class="qhead"><span class="num">第 221 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Ajax 中，如果服务器返回的响应状态码为 404，表示请求资源未找到。</div>
+        </article>
+
+        <article class="question" data-search="222 在 Ajax 中，readyState 属性的值为 5 表示请求已取消。 ×">
+          <div class="qhead"><span class="num">第 222 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Ajax 中，readyState 属性的值为 5 表示请求已取消。</div>
+        </article>
+
+        <article class="question" data-search="223 在 Ajax 中，使用 responseXML 属性获取的是 XML 文件的文档对象。 √">
+          <div class="qhead"><span class="num">第 223 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Ajax 中，使用 responseXML 属性获取的是 XML 文件的文档对象。</div>
+        </article>
+
+        <article class="question" data-search="224 在 Ajax 中，使用 JSON.stringify() 方法可以将 JavaScript 对象转换为 JSON
+字符串。 √">
+          <div class="qhead"><span class="num">第 224 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Ajax 中，使用 JSON.stringify() 方法可以将 JavaScript 对象转换为 JSON
+字符串。</div>
+        </article>
+
+        <article class="question" data-search="225 JSONP 是一种基于 XMLHttpRequest 的跨域解决方案。 ×">
+          <div class="qhead"><span class="num">第 225 题</span><span class="answer">×</span></div>
+          <div class="stem">JSONP 是一种基于 XMLHttpRequest 的跨域解决方案。</div>
+        </article>
+
+        <article class="question" data-search="226 在 java.util.List 接口的实现类中，元素是有序的并且可以重复。 √">
+          <div class="qhead"><span class="num">第 226 题</span><span class="answer">√</span></div>
+          <div class="stem">在 java.util.List 接口的实现类中，元素是有序的并且可以重复。</div>
+        </article>
+
+        <article class="question" data-search="227 在 java.util.List 接口的实现类 java.util.ArrayList 所表示的集合中，数据
+结构底层由数组来实现，能够精确地控制每个元素的插入位置，或者删除某个位置的元素，
+对元素的随机访问速度特别快。 √">
+          <div class="qhead"><span class="num">第 227 题</span><span class="answer">√</span></div>
+          <div class="stem">在 java.util.List 接口的实现类 java.util.ArrayList 所表示的集合中，数据
+结构底层由数组来实现，能够精确地控制每个元素的插入位置，或者删除某个位置的元素，
+对元素的随机访问速度特别快。</div>
+        </article>
+
+        <article class="question" data-search="228 Java 语言中，LinkedList 增删效率比 ArrayList 高。 √">
+          <div class="qhead"><span class="num">第 228 题</span><span class="answer">√</span></div>
+          <div class="stem">Java 语言中，LinkedList 增删效率比 ArrayList 高。</div>
+        </article>
+
+        <article class="question" data-search="229 Java 语言中，在使用 Iterator 对集合中的元素进行遍历时，如果调用了集合对
+象的 remove() 方法删除元素，然后继续使用 Iterator 遍历元素，会出现异常。 √">
+          <div class="qhead"><span class="num">第 229 题</span><span class="answer">√</span></div>
+          <div class="stem">Java 语言中，在使用 Iterator 对集合中的元素进行遍历时，如果调用了集合对
+象的 remove() 方法删除元素，然后继续使用 Iterator 遍历元素，会出现异常。</div>
+        </article>
+
+        <article class="question" data-search="230 在 Java 的集合框架中，Set 集合是通过键值对的方式来存储对象的。 ×">
+          <div class="qhead"><span class="num">第 230 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 的集合框架中，Set 集合是通过键值对的方式来存储对象的。</div>
+        </article>
+
+        <article class="question" data-search="231 在 Java 集合框架中 Map 接口的 V remove(Object key) 移除所有的键值对元
+素。 ×">
+          <div class="qhead"><span class="num">第 231 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 集合框架中 Map 接口的 V remove(Object key) 移除所有的键值对元
+素。</div>
+        </article>
+
+        <article class="question" data-search="232 在 Java 中，泛型类可以使用基本数据类型作为类型参数。 ×">
+          <div class="qhead"><span class="num">第 232 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中，泛型类可以使用基本数据类型作为类型参数。</div>
+        </article>
+
+        <article class="question" data-search="233 Java 语言中，使用 Collections 工具类中的 sort() 方法可以对 List 集合进
+行排序。 √">
+          <div class="qhead"><span class="num">第 233 题</span><span class="answer">√</span></div>
+          <div class="stem">Java 语言中，使用 Collections 工具类中的 sort() 方法可以对 List 集合进
+行排序。</div>
+        </article>
+
+        <article class="question" data-search="234 Java 系统的标准输入对象是 System.in，标准输出对象有两个，分别是
+System.out 和 System.err。 √">
+          <div class="qhead"><span class="num">第 234 题</span><span class="answer">√</span></div>
+          <div class="stem">Java 系统的标准输入对象是 System.in，标准输出对象有两个，分别是
+System.out 和 System.err。</div>
+        </article>
+
+        <article class="question" data-search="235 Java 语言中，File 类中的 list() 方法用于得到所有子目录下的 File 类型对
+象。 ×">
+          <div class="qhead"><span class="num">第 235 题</span><span class="answer">×</span></div>
+          <div class="stem">Java 语言中，File 类中的 list() 方法用于得到所有子目录下的 File 类型对
+象。</div>
+        </article>
+
+        <article class="question" data-search="236 Java 语言中，字节流只能用来读写二进制文件。 ×">
+          <div class="qhead"><span class="num">第 236 题</span><span class="answer">×</span></div>
+          <div class="stem">Java 语言中，字节流只能用来读写二进制文件。</div>
+        </article>
+
+        <article class="question" data-search="237 在 Java 中，输入字符流的父类是 InputStream。 ×">
+          <div class="qhead"><span class="num">第 237 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中，输入字符流的父类是 InputStream。</div>
+        </article>
+
+        <article class="question" data-search="238 在 Java 中，BufferedReader 类的 readLine() 方法，如果读到流的末尾，该方
+法返回的结果为 null。 √">
+          <div class="qhead"><span class="num">第 238 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Java 中，BufferedReader 类的 readLine() 方法，如果读到流的末尾，该方
+法返回的结果为 null。</div>
+        </article>
+
+        <article class="question" data-search="239 在 Java I/O 应用中用户可以自定义自己的异常类。 √">
+          <div class="qhead"><span class="num">第 239 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Java I/O 应用中用户可以自定义自己的异常类。</div>
+        </article>
+
+        <article class="question" data-search="240 Java 语言中，程序开发者必须创建一个线程去管理内存的分配。 ×">
+          <div class="qhead"><span class="num">第 240 题</span><span class="answer">×</span></div>
+          <div class="stem">Java 语言中，程序开发者必须创建一个线程去管理内存的分配。</div>
+        </article>
+
+        <article class="question" data-search="241 在 Java 中，多线程没有安全问题。 ×">
+          <div class="qhead"><span class="num">第 241 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中，多线程没有安全问题。</div>
+        </article>
+
+        <article class="question" data-search="242 在 Java 中的一个线程可以多次调用 start() 方法。 ×">
+          <div class="qhead"><span class="num">第 242 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中的一个线程可以多次调用 start() 方法。</div>
+        </article>
+
+        <article class="question" data-search="243 在 Java 中，当线程类所定义的 run() 方法执行完毕，线程的运行就会终止。 √">
+          <div class="qhead"><span class="num">第 243 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Java 中，当线程类所定义的 run() 方法执行完毕，线程的运行就会终止。</div>
+        </article>
+
+        <article class="question" data-search="244 Java 语言中，线程的优先级是不能改变的。 ×">
+          <div class="qhead"><span class="num">第 244 题</span><span class="answer">×</span></div>
+          <div class="stem">Java 语言中，线程的优先级是不能改变的。</div>
+        </article>
+
+        <article class="question" data-search="245 在 Java 中，一个线程让另一个线程不能执行，它可以对第二个线程调用 yield()
+方法。 ×">
+          <div class="qhead"><span class="num">第 245 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中，一个线程让另一个线程不能执行，它可以对第二个线程调用 yield()
+方法。</div>
+        </article>
+
+        <article class="question" data-search="246 使用 JDBC 的应用程序可以直接与不同的数据库进行连接，而不需要依赖于底层
+数据库驱动。 ×">
+          <div class="qhead"><span class="num">第 246 题</span><span class="answer">×</span></div>
+          <div class="stem">使用 JDBC 的应用程序可以直接与不同的数据库进行连接，而不需要依赖于底层
+数据库驱动。</div>
+        </article>
+
+        <article class="question" data-search="247 数据库不是 JDBC 的组成部分。 √">
+          <div class="qhead"><span class="num">第 247 题</span><span class="answer">√</span></div>
+          <div class="stem">数据库不是 JDBC 的组成部分。</div>
+        </article>
+
+        <article class="question" data-search="248 在 Java 的 JDBC API 中只支持两层模型，不支持三层模型。 ×">
+          <div class="qhead"><span class="num">第 248 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 的 JDBC API 中只支持两层模型，不支持三层模型。</div>
+        </article>
+
+        <article class="question" data-search="249 在 Java 中，对于相同的 SQL 语句，Statement 对象每次执行时，都会对其进行
+编译。 √">
+          <div class="qhead"><span class="num">第 249 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Java 中，对于相同的 SQL 语句，Statement 对象每次执行时，都会对其进行
+编译。</div>
+        </article>
+
+        <article class="question" data-search="250 在 Java 中，PreparedStatement 是 Statement 的子接口，用于执行预编译的
+SQL 语句。 √">
+          <div class="qhead"><span class="num">第 250 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Java 中，PreparedStatement 是 Statement 的子接口，用于执行预编译的
+SQL 语句。</div>
+        </article>
+
+        <article class="question" data-search="251 在 Java 中，应用程序可以直接与不同的数据库进行连接，而不需要依赖于底层
+数据库驱动程序。 ×">
+          <div class="qhead"><span class="num">第 251 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中，应用程序可以直接与不同的数据库进行连接，而不需要依赖于底层
+数据库驱动程序。</div>
+        </article>
+
+        <article class="question" data-search="252 在 Java 的 Statement 接口中,能够执行给定的 SQL 语句并且可能返回多个结
+果的方法是 executeQuery() 方法。 ×">
+          <div class="qhead"><span class="num">第 252 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 的 Statement 接口中,能够执行给定的 SQL 语句并且可能返回多个结
+果的方法是 executeQuery() 方法。</div>
+        </article>
+
+        <article class="question" data-search="253 TCP 是一种用户数据报协议。 ×">
+          <div class="qhead"><span class="num">第 253 题</span><span class="answer">×</span></div>
+          <div class="stem">TCP 是一种用户数据报协议。</div>
+        </article>
+
+        <article class="question" data-search="254 IPv4 版本的 IP 地址使用 4 个字节来表示，IPv6 的 IP 版本地址使用 8 个字
+节来表示。 ×">
+          <div class="qhead"><span class="num">第 254 题</span><span class="answer">×</span></div>
+          <div class="stem">IPv4 版本的 IP 地址使用 4 个字节来表示，IPv6 的 IP 版本地址使用 8 个字
+节来表示。</div>
+        </article>
+
+        <article class="question" data-search="255 Java 中 Socket 是传输层供给应用层的编程接口，是应用层与传输层之间的桥
+梁 。 √">
+          <div class="qhead"><span class="num">第 255 题</span><span class="answer">√</span></div>
+          <div class="stem">Java 中 Socket 是传输层供给应用层的编程接口，是应用层与传输层之间的桥
+梁 。</div>
+        </article>
+
+        <article class="question" data-search="256 在 Java 中，在基于 TCP 的 SOCKET 通讯流程中，服务端模块一般会通过
+connect 命令向客户端发起连接请求。 ×">
+          <div class="qhead"><span class="num">第 256 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中，在基于 TCP 的 SOCKET 通讯流程中，服务端模块一般会通过
+connect 命令向客户端发起连接请求。</div>
+        </article>
+
+        <article class="question" data-search="257 在用 Java 语言开发基于 Socket 的客户端程序的场景里，在创建套接字对象时，
+只需要输入表示端口的参数。 ×">
+          <div class="qhead"><span class="num">第 257 题</span><span class="answer">×</span></div>
+          <div class="stem">在用 Java 语言开发基于 Socket 的客户端程序的场景里，在创建套接字对象时，
+只需要输入表示端口的参数。</div>
+        </article>
+
+        <article class="question" data-search="258 在 Java 的 Socket 通信中，服务器端通过 accept() 方法来接受客户端的连接
+请求。 √">
+          <div class="qhead"><span class="num">第 258 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Java 的 Socket 通信中，服务器端通过 accept() 方法来接受客户端的连接
+请求。</div>
+        </article>
+
+        <article class="question" data-search="259 由于 UDP 是面向无连接的协议，可以保证数据的完整性，因此在传输重要数据时
+建议使用 UDP 协议。 ×">
+          <div class="qhead"><span class="num">第 259 题</span><span class="answer">×</span></div>
+          <div class="stem">由于 UDP 是面向无连接的协议，可以保证数据的完整性，因此在传输重要数据时
+建议使用 UDP 协议。</div>
+        </article>
+
+        <article class="question" data-search="260 传输控制协议 TCP 属于传输层协议，而用户数据报协议 UDP 属于网络层协议。 ×">
+          <div class="qhead"><span class="num">第 260 题</span><span class="answer">×</span></div>
+          <div class="stem">传输控制协议 TCP 属于传输层协议，而用户数据报协议 UDP 属于网络层协议。</div>
+        </article>
+
+        <article class="question" data-search="261 java.net 包中的 DatagramPacket 类用于封装 UDP 通信中发送或者接收的数据。 √">
+          <div class="qhead"><span class="num">第 261 题</span><span class="answer">√</span></div>
+          <div class="stem">java.net 包中的 DatagramPacket 类用于封装 UDP 通信中发送或者接收的数据。</div>
+        </article>
+
+        <article class="question" data-search="262 在 Java 中，DatagramSocket 类中提供了 accept() 方法,用于接收数据报包。 ×">
+          <div class="qhead"><span class="num">第 262 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Java 中，DatagramSocket 类中提供了 accept() 方法,用于接收数据报包。</div>
+        </article>
+
+        <article class="question" data-search="263 TCP/IP 可以提供异构网络之间的互连。 √">
+          <div class="qhead"><span class="num">第 263 题</span><span class="answer">√</span></div>
+          <div class="stem">TCP/IP 可以提供异构网络之间的互连。</div>
+        </article>
+
+        <article class="question" data-search="264 TCP 是一种面向连接的、可靠的传输协议，它使用三次握手来建立连接，并使用
+数据包确认和重传机制来确保数据的可靠性。 √">
+          <div class="qhead"><span class="num">第 264 题</span><span class="answer">√</span></div>
+          <div class="stem">TCP 是一种面向连接的、可靠的传输协议，它使用三次握手来建立连接，并使用
+数据包确认和重传机制来确保数据的可靠性。</div>
+        </article>
+
+        <article class="question" data-search="265 死锁的产生有四个必要条件：互斥使用、不可抢占、请求和保持、循环等待。 √">
+          <div class="qhead"><span class="num">第 265 题</span><span class="answer">√</span></div>
+          <div class="stem">死锁的产生有四个必要条件：互斥使用、不可抢占、请求和保持、循环等待。</div>
+        </article>
+
+        <article class="question" data-search="266 Android 应用程序的每个 Activity 都必须在清单文件 Manifest 中进行注册。 √">
+          <div class="qhead"><span class="num">第 266 题</span><span class="answer">√</span></div>
+          <div class="stem">Android 应用程序的每个 Activity 都必须在清单文件 Manifest 中进行注册。</div>
+        </article>
+
+        <article class="question" data-search="267 Android 项目中 gen 目录是存放生成的代码文件的目录，开发者可以手动编辑这
+些文件。 ×">
+          <div class="qhead"><span class="num">第 267 题</span><span class="answer">×</span></div>
+          <div class="stem">Android 项目中 gen 目录是存放生成的代码文件的目录，开发者可以手动编辑这
+些文件。</div>
+        </article>
+
+        <article class="question" data-search="268 Android 模拟器的性能和真实设备相比一定是相同的。 ×">
+          <div class="qhead"><span class="num">第 268 题</span><span class="answer">×</span></div>
+          <div class="stem">Android 模拟器的性能和真实设备相比一定是相同的。</div>
+        </article>
+
+        <article class="question" data-search="269 在 Android 应用程序运行时，如果应用被切换到后台，系统会调用活动的
+onStop() 方法。 √">
+          <div class="qhead"><span class="num">第 269 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 应用程序运行时，如果应用被切换到后台，系统会调用活动的
+onStop() 方法。</div>
+        </article>
+
+        <article class="question" data-search="270 在 Android 中，Activity 是一种用于存储和管理数据的组件。 ×">
+          <div class="qhead"><span class="num">第 270 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，Activity 是一种用于存储和管理数据的组件。</div>
+        </article>
+
+        <article class="question" data-search="271 在 Android 中，通过 setContentView(R.layout.activity_main) 方法可以将
+Activity 关联的布局文件设置为 activity_main.xml。 √">
+          <div class="qhead"><span class="num">第 271 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，通过 setContentView(R.layout.activity_main) 方法可以将
+Activity 关联的布局文件设置为 activity_main.xml。</div>
+        </article>
+
+        <article class="question" data-search="272 在 Android 系统中，Activity 销毁时执行执行方法是 onDestroy()。 √">
+          <div class="qhead"><span class="num">第 272 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 系统中，Activity 销毁时执行执行方法是 onDestroy()。</div>
+        </article>
+
+        <article class="question" data-search="273 在 Android 中，当一个 Activity 从后台重新回到前台时，系统会调用
+onRestart() 方法。 √">
+          <div class="qhead"><span class="num">第 273 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，当一个 Activity 从后台重新回到前台时，系统会调用
+onRestart() 方法。</div>
+        </article>
+
+        <article class="question" data-search="274 在 Android 中，使用 Intent 传递数据时，被传递的对象需要实现 Serializable
+接口。 ×">
+          <div class="qhead"><span class="num">第 274 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，使用 Intent 传递数据时，被传递的对象需要实现 Serializable
+接口。</div>
+        </article>
+
+        <article class="question" data-search="275 在 Android 中，调用 setResult() 方法设置结果数据后，可以直接通过
+getIntent().getExtras() 获取结果数据。 ×">
+          <div class="qhead"><span class="num">第 275 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，调用 setResult() 方法设置结果数据后，可以直接通过
+getIntent().getExtras() 获取结果数据。</div>
+        </article>
+
+        <article class="question" data-search="276 在 Android 中，Fragment 可以单独存在，不必依附于一个 Activity。 ×">
+          <div class="qhead"><span class="num">第 276 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，Fragment 可以单独存在，不必依附于一个 Activity。</div>
+        </article>
+
+        <article class="question" data-search="277 在 Android 中，通过 FragmentManager 和 FragmentTransaction 动态添加
+Fragment 时，事务必须通过 commit() 方法提交。 √">
+          <div class="qhead"><span class="num">第 277 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，通过 FragmentManager 和 FragmentTransaction 动态添加
+Fragment 时，事务必须通过 commit() 方法提交。</div>
+        </article>
+
+        <article class="question" data-search="278 在 Android 中，当 Fragment 由不可见变为可见时，系统会调用 onStart() 方
+法。 √">
+          <div class="qhead"><span class="num">第 278 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，当 Fragment 由不可见变为可见时，系统会调用 onStart() 方
+法。</div>
+        </article>
+
+        <article class="question" data-search="279 在 Android 中，可以通过 DatePickerDialog 设置最小和最大日期范围。 √">
+          <div class="qhead"><span class="num">第 279 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，可以通过 DatePickerDialog 设置最小和最大日期范围。</div>
+        </article>
+
+        <article class="question" data-search="280 在 Android 中，可以通过 TimePickerDialog 设置最小和最大时间范围。 ×">
+          <div class="qhead"><span class="num">第 280 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，可以通过 TimePickerDialog 设置最小和最大时间范围。</div>
+        </article>
+
+        <article class="question" data-search="281 在 Android 中，通知可以显示在屏幕的任何位置，不受限制。 ×">
+          <div class="qhead"><span class="num">第 281 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，通知可以显示在屏幕的任何位置，不受限制。</div>
+        </article>
+
+        <article class="question" data-search="282 在 Android 中，使用 NotificationManager 的 notify 方法显示 notification
+消息。 √">
+          <div class="qhead"><span class="num">第 282 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，使用 NotificationManager 的 notify 方法显示 notification
+消息。</div>
+        </article>
+
+        <article class="question" data-search="283 在 Android 中，BroadcastReceiver 可以中断正在进行的电话通话。 ×">
+          <div class="qhead"><span class="num">第 283 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，BroadcastReceiver 可以中断正在进行的电话通话。</div>
+        </article>
+
+        <article class="question" data-search="284 在 Android 中，通过使用 sendOrderedBroadcast() 发送的有序广播，可以修改
+广播消息的内容。 √">
+          <div class="qhead"><span class="num">第 284 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，通过使用 sendOrderedBroadcast() 发送的有序广播，可以修改
+广播消息的内容。</div>
+        </article>
+
+        <article class="question" data-search="285 在 Android 中，AlarmManager 可以用于替代定时器来执行定时任务。 √">
+          <div class="qhead"><span class="num">第 285 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，AlarmManager 可以用于替代定时器来执行定时任务。</div>
+        </article>
+
+        <article class="question" data-search="286 在 Android 中，每个应用程序都有一个独立的 SharedPreferences 实例，不与
+其他应用程序共享。 √">
+          <div class="qhead"><span class="num">第 286 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，每个应用程序都有一个独立的 SharedPreferences 实例，不与
+其他应用程序共享。</div>
+        </article>
+
+        <article class="question" data-search="287 在 Android 中，使用 SharedPreferences 的 edit() 方法获取的 Editor 对象
+可以执行读操作。 ×">
+          <div class="qhead"><span class="num">第 287 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，使用 SharedPreferences 的 edit() 方法获取的 Editor 对象
+可以执行读操作。</div>
+        </article>
+
+        <article class="question" data-search="288 在 Android 中，应用程序可以直接访问其他应用程序的私有存储空间。 ×">
+          <div class="qhead"><span class="num">第 288 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，应用程序可以直接访问其他应用程序的私有存储空间。</div>
+        </article>
+
+        <article class="question" data-search="289 在 Android 中，应用程序的内部存储空间是公开可读的。 ×">
+          <div class="qhead"><span class="num">第 289 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，应用程序的内部存储空间是公开可读的。</div>
+        </article>
+
+        <article class="question" data-search="290 在 Android 中，应用程序可以直接访问其他应用程序的外部存储空间。 √">
+          <div class="qhead"><span class="num">第 290 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，应用程序可以直接访问其他应用程序的外部存储空间。</div>
+        </article>
+
+        <article class="question" data-search="291 在 Android 中，SQLite 数据库支持跨进程访问。 ×">
+          <div class="qhead"><span class="num">第 291 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，SQLite 数据库支持跨进程访问。</div>
+        </article>
+
+        <article class="question" data-search="292 在 Android 中，可以使用 SQLite 数据库的 delete() 方法删除表中的所有记
+录。 √">
+          <div class="qhead"><span class="num">第 292 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，可以使用 SQLite 数据库的 delete() 方法删除表中的所有记
+录。</div>
+        </article>
+
+        <article class="question" data-search="293 在 Android 应用中创建数据库帮助类时，需要继承 SQLiteOpenHelper 类，才能
+创建和更新数据库。 √">
+          <div class="qhead"><span class="num">第 293 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 应用中创建数据库帮助类时，需要继承 SQLiteOpenHelper 类，才能
+创建和更新数据库。</div>
+        </article>
+
+        <article class="question" data-search="294 Android 中 ContentProvider 类主要用于从内容提供者处获取和修改数据。 ×">
+          <div class="qhead"><span class="num">第 294 题</span><span class="answer">×</span></div>
+          <div class="stem">Android 中 ContentProvider 类主要用于从内容提供者处获取和修改数据。</div>
+        </article>
+
+        <article class="question" data-search="295 在 Android 中，通过 Content Provider 删除数据时，可以直接使用
+ContentResolver 的 delete() 方法。 √">
+          <div class="qhead"><span class="num">第 295 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，通过 Content Provider 删除数据时，可以直接使用
+ContentResolver 的 delete() 方法。</div>
+        </article>
+
+        <article class="question" data-search="296 在 Android 中，通过 Content Provider 插入数据时，可以直接使用
+ContentResolver 的 insert() 方法，不需要指定 URI 中的表名。 ×">
+          <div class="qhead"><span class="num">第 296 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，通过 Content Provider 插入数据时，可以直接使用
+ContentResolver 的 insert() 方法，不需要指定 URI 中的表名。</div>
+        </article>
+
+        <article class="question" data-search="297 在 Android 中 Service 是能够在后台长时间运行，并且提供用户界面的应用程
+序组件。 ×">
+          <div class="qhead"><span class="num">第 297 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中 Service 是能够在后台长时间运行，并且提供用户界面的应用程
+序组件。</div>
+        </article>
+
+        <article class="question" data-search="298 在 Android 中，如果 Activity 与 Service 通过 bindService() 方法绑定，当
+所有绑定的 Activity 都解绑后，Service 会自动销毁。 √">
+          <div class="qhead"><span class="num">第 298 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，如果 Activity 与 Service 通过 bindService() 方法绑定，当
+所有绑定的 Activity 都解绑后，Service 会自动销毁。</div>
+        </article>
+
+        <article class="question" data-search="299 在 Android 中，通过 startService() 方法启动的 Service 可以通过
+bindService() 方法进行绑定。 √">
+          <div class="qhead"><span class="num">第 299 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，通过 startService() 方法启动的 Service 可以通过
+bindService() 方法进行绑定。</div>
+        </article>
+
+        <article class="question" data-search="300 在 Android 中，通过 startService() 方法启动的 Service 可以通过
+unbindService() 方法解绑。 ×">
+          <div class="qhead"><span class="num">第 300 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，通过 startService() 方法启动的 Service 可以通过
+unbindService() 方法解绑。</div>
+        </article>
+
+        <article class="question" data-search="301 在 Android 中，Bound Service 通常只有在它服务于其他应用程序组件时才会存
+在，并且它不会无限的在后台运行。 √">
+          <div class="qhead"><span class="num">第 301 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，Bound Service 通常只有在它服务于其他应用程序组件时才会存
+在，并且它不会无限的在后台运行。</div>
+        </article>
+
+        <article class="question" data-search="302 在 Android 中，Handler 主要用于在 UI 线程中处理用户输入事件。 ×">
+          <div class="qhead"><span class="num">第 302 题</span><span class="answer">×</span></div>
+          <div class="stem">在 Android 中，Handler 主要用于在 UI 线程中处理用户输入事件。</div>
+        </article>
+
+        <article class="question" data-search="303 在 Android 中，Handler 的 post() 方法可以用于将一个 Runnable 对象放入消
+息队列，并在 UI 线程中执行。 √">
+          <div class="qhead"><span class="num">第 303 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，Handler 的 post() 方法可以用于将一个 Runnable 对象放入消
+息队列，并在 UI 线程中执行。</div>
+        </article>
+
+        <article class="question" data-search="304 在 Android 中，AsyncTask 的 onProgressUpdate() 方法用于在执行后台任务过
+程中更新 UI 元素。 √">
+          <div class="qhead"><span class="num">第 304 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，AsyncTask 的 onProgressUpdate() 方法用于在执行后台任务过
+程中更新 UI 元素。</div>
+        </article>
+
+        <article class="question" data-search="305 在 Android 中，IntentService 在执行任务时会自动停止，无需手动调用
+stopSelf() 方法。 √">
+          <div class="qhead"><span class="num">第 305 题</span><span class="answer">√</span></div>
+          <div class="stem">在 Android 中，IntentService 在执行任务时会自动停止，无需手动调用
+stopSelf() 方法。</div>
+        </article>
+
+        <article class="question" data-search="306 软件产品部署的目标是确保系统在生产环境中能够稳定运行。 √">
+          <div class="qhead"><span class="num">第 306 题</span><span class="answer">√</span></div>
+          <div class="stem">软件产品部署的目标是确保系统在生产环境中能够稳定运行。</div>
+        </article>
+
+        <article class="question" data-search="307 软件产品部署的特征之一是“可重复性”，即部署流程可以多次执行而不产生意
+外结果。 √">
+          <div class="qhead"><span class="num">第 307 题</span><span class="answer">√</span></div>
+          <div class="stem">软件产品部署的特征之一是“可重复性”，即部署流程可以多次执行而不产生意
+外结果。</div>
+        </article>
+
+        <article class="question" data-search="308 在“金丝雀发布”策略中，新版本首先部署给大部分用户，以观察其在生产环境
+中的表现，再逐步缩小部署范围。 ×">
+          <div class="qhead"><span class="num">第 308 题</span><span class="answer">×</span></div>
+          <div class="stem">在“金丝雀发布”策略中，新版本首先部署给大部分用户，以观察其在生产环境
+中的表现，再逐步缩小部署范围。</div>
+        </article>
+
+        <article class="question" data-search="309 蓝绿部署是一种将新版本逐步推送给用户，通过逐步扩大部署范围的方式来确保
+新版本在生产环境中稳定运行的策略。 ×">
+          <div class="qhead"><span class="num">第 309 题</span><span class="answer">×</span></div>
+          <div class="stem">蓝绿部署是一种将新版本逐步推送给用户，通过逐步扩大部署范围的方式来确保
+新版本在生产环境中稳定运行的策略。</div>
+        </article>
+
+        <article class="question" data-search="310 集中式部署模型适用于需要集中管理和控制的场景，但可能受到单点故障的影响。 √">
+          <div class="qhead"><span class="num">第 310 题</span><span class="answer">√</span></div>
+          <div class="stem">集中式部署模型适用于需要集中管理和控制的场景，但可能受到单点故障的影响。</div>
+        </article>
+
+        <article class="question" data-search="311 单一职责原则在集中式部署中的设计中通常用于确保每个模块或组件只负责一项
+功能。 √">
+          <div class="qhead"><span class="num">第 311 题</span><span class="answer">√</span></div>
+          <div class="stem">单一职责原则在集中式部署中的设计中通常用于确保每个模块或组件只负责一项
+功能。</div>
+        </article>
+
+        <article class="question" data-search="312 在集中式部署中，由于所有组件都在一个服务器上，系统的扩展性相对较弱。 √">
+          <div class="qhead"><span class="num">第 312 题</span><span class="answer">√</span></div>
+          <div class="stem">在集中式部署中，由于所有组件都在一个服务器上，系统的扩展性相对较弱。</div>
+        </article>
+
+        <article class="question" data-search="313 负载均衡是集中式部署中的关键技术之一，其主要目标是确保系统在某个组件发
+生故障时能够自动切换到另一个可用的组件，从而保持系统的可用性。 ×">
+          <div class="qhead"><span class="num">第 313 题</span><span class="answer">×</span></div>
+          <div class="stem">负载均衡是集中式部署中的关键技术之一，其主要目标是确保系统在某个组件发
+生故障时能够自动切换到另一个可用的组件，从而保持系统的可用性。</div>
+        </article>
+
+        <article class="question" data-search="314 分布式部署的主要目标之一是通过将系统的不同模块分布在多个服务器上，提高
+系统的可用性和性能。 √">
+          <div class="qhead"><span class="num">第 314 题</span><span class="answer">√</span></div>
+          <div class="stem">分布式部署的主要目标之一是通过将系统的不同模块分布在多个服务器上，提高
+系统的可用性和性能。</div>
+        </article>
+
+        <article class="question" data-search="315 接口隔离原则是分布式系统设计中的一项关键设计原则，其主要目标是降低组件
+之间的耦合度，使得系统更加灵活。 √">
+          <div class="qhead"><span class="num">第 315 题</span><span class="answer">√</span></div>
+          <div class="stem">接口隔离原则是分布式系统设计中的一项关键设计原则，其主要目标是降低组件
+之间的耦合度，使得系统更加灵活。</div>
+        </article>
+
+        <article class="question" data-search="316 在分布式系统中，由于组件分布在不同的服务器上，系统的可用性相对较低，因
+为任何一个服务器的故障都可能导致系统部分不可用。 ×">
+          <div class="qhead"><span class="num">第 316 题</span><span class="answer">×</span></div>
+          <div class="stem">在分布式系统中，由于组件分布在不同的服务器上，系统的可用性相对较低，因
+为任何一个服务器的故障都可能导致系统部分不可用。</div>
+        </article>
+
+        <article class="question" data-search="317 多租户部署是一种常用的策略，用于将多个租户的数据和操作隔离开，以确保系
+统的安全性和稳定性。 √">
+          <div class="qhead"><span class="num">第 317 题</span><span class="answer">√</span></div>
+          <div class="stem">多租户部署是一种常用的策略，用于将多个租户的数据和操作隔离开，以确保系
+统的安全性和稳定性。</div>
+        </article>
+
+        <article class="question" data-search="318 远程调试是一种在本地开发环境之外调试远程服务器上的代码的方法。 √">
+          <div class="qhead"><span class="num">第 318 题</span><span class="answer">√</span></div>
+          <div class="stem">远程调试是一种在本地开发环境之外调试远程服务器上的代码的方法。</div>
+        </article>
+
+        <article class="question" data-search="319 远程调试环境中，网络连接速度不会影响代码的调试和运行效果，因为调试是在
+本地进行的。 ×">
+          <div class="qhead"><span class="num">第 319 题</span><span class="answer">×</span></div>
+          <div class="stem">远程调试环境中，网络连接速度不会影响代码的调试和运行效果，因为调试是在
+本地进行的。</div>
+        </article>
+
+        <article class="question" data-search="320 主动性远程调试是一种通过在代码中插入断点或日志来收集调试信息的远程调试
+类型。 ×">
+          <div class="qhead"><span class="num">第 320 题</span><span class="answer">×</span></div>
+          <div class="stem">主动性远程调试是一种通过在代码中插入断点或日志来收集调试信息的远程调试
+类型。</div>
+        </article>
+
+        <article class="question" data-search="321 日志分析是一种远程调试方法，通过在代码中添加日志语句来收集运行时的调试
+信息，以便后续分析和问题排查。 √">
+          <div class="qhead"><span class="num">第 321 题</span><span class="answer">√</span></div>
+          <div class="stem">日志分析是一种远程调试方法，通过在代码中添加日志语句来收集运行时的调试
+信息，以便后续分析和问题排查。</div>
+        </article>
+
+        <article class="question" data-search="322 Eclipse IDE 具备开发和调试的高级特性，使其成为一个全面的工具。 √">
+          <div class="qhead"><span class="num">第 322 题</span><span class="answer">√</span></div>
+          <div class="stem">Eclipse IDE 具备开发和调试的高级特性，使其成为一个全面的工具。</div>
+        </article>
+
+        <article class="question" data-search="323 在测试环境中，考虑安全性是一个次要因素，因为测试环境通常不包含真实的用
+户数据。 ×">
+          <div class="qhead"><span class="num">第 323 题</span><span class="answer">×</span></div>
+          <div class="stem">在测试环境中，考虑安全性是一个次要因素，因为测试环境通常不包含真实的用
+户数据。</div>
+        </article>
+
+        <article class="question" data-search="324 测试环境的重要性在软件开发过程的初期并不明显，只有在测试阶段才变得关键。 ×">
+          <div class="qhead"><span class="num">第 324 题</span><span class="answer">×</span></div>
+          <div class="stem">测试环境的重要性在软件开发过程的初期并不明显，只有在测试阶段才变得关键。</div>
+        </article>
+
+        <article class="question" data-search="325 进行环境监测是测试环境规划中的一个阶段，主要用于实时监测测试环境的性能
+和稳定性。 √">
+          <div class="qhead"><span class="num">第 325 题</span><span class="answer">√</span></div>
+          <div class="stem">进行环境监测是测试环境规划中的一个阶段，主要用于实时监测测试环境的性能
+和稳定性。</div>
+        </article>
+
+        <article class="question" data-search="326 通过虚拟机，可以在单个计算机上并发运行多个操作系统。 √">
+          <div class="qhead"><span class="num">第 326 题</span><span class="answer">√</span></div>
+          <div class="stem">通过虚拟机，可以在单个计算机上并发运行多个操作系统。</div>
+        </article>
+
+        <article class="question" data-search="327 虚拟机的应用主要局限于个人电脑领域，对于企业级服务器等大规模系统并不适
+用。 ×">
+          <div class="qhead"><span class="num">第 327 题</span><span class="answer">×</span></div>
+          <div class="stem">虚拟机的应用主要局限于个人电脑领域，对于企业级服务器等大规模系统并不适
+用。</div>
+        </article>
+
+        <article class="question" data-search="328 制定测试计划是测试环境建立过程中的一个重要步骤，可以帮助团队明确测试目
+标和策略。 √">
+          <div class="qhead"><span class="num">第 328 题</span><span class="answer">√</span></div>
+          <div class="stem">制定测试计划是测试环境建立过程中的一个重要步骤，可以帮助团队明确测试目
+标和策略。</div>
+        </article>
+
+        <article class="question" data-search="329 自动部署测试环境可以提高部署的效率，并降低人为错误的发生。 √">
+          <div class="qhead"><span class="num">第 329 题</span><span class="answer">√</span></div>
+          <div class="stem">自动部署测试环境可以提高部署的效率，并降低人为错误的发生。</div>
+        </article>
+
+        <article class="question" data-search="330 环境备份和还原是测试环境维护过程中确保环境配置和数据不受损失的关键步
+骤。 √">
+          <div class="qhead"><span class="num">第 330 题</span><span class="answer">√</span></div>
+          <div class="stem">环境备份和还原是测试环境维护过程中确保环境配置和数据不受损失的关键步
+骤。</div>
+        </article>
+
+        <article class="question" data-search="331 探索性测试是一种计划不明确、灵活和基于经验的测试方法，测试人员在执行测
+试时自由探索软件系统。 √">
+          <div class="qhead"><span class="num">第 331 题</span><span class="answer">√</span></div>
+          <div class="stem">探索性测试是一种计划不明确、灵活和基于经验的测试方法，测试人员在执行测
+试时自由探索软件系统。</div>
+        </article>
+
+        <article class="question" data-search="332 单元测试的目标是验证整个系统的功能是否符合用户需求。 ×">
+          <div class="qhead"><span class="num">第 332 题</span><span class="answer">×</span></div>
+          <div class="stem">单元测试的目标是验证整个系统的功能是否符合用户需求。</div>
+        </article>
+
+        <article class="question" data-search="333 集成测试分为自上而下和自下而上两种策略，它们的选择取决于项目的具体需求
+和特点。 √">
+          <div class="qhead"><span class="num">第 333 题</span><span class="answer">√</span></div>
+          <div class="stem">集成测试分为自上而下和自下而上两种策略，它们的选择取决于项目的具体需求
+和特点。</div>
+        </article>
+
+        <article class="question" data-search="334 验收测试和确认测试是相同的概念，用于确认软件系统是否符合用户需求。 ×">
+          <div class="qhead"><span class="num">第 334 题</span><span class="answer">×</span></div>
+          <div class="stem">验收测试和确认测试是相同的概念，用于确认软件系统是否符合用户需求。</div>
+        </article>
+
+        <article class="question" data-search="335 Beta 测试是在软件发布前由内部测试团队进行的测试，用于评估软件系统的性能
+和稳定性。 ×">
+          <div class="qhead"><span class="num">第 335 题</span><span class="answer">×</span></div>
+          <div class="stem">Beta 测试是在软件发布前由内部测试团队进行的测试，用于评估软件系统的性能
+和稳定性。</div>
+        </article>
+
+        <article class="question" data-search="336 验收测试是由内部测试团队进行的测试，用于评估软件系统的性能和稳定性。 ×">
+          <div class="qhead"><span class="num">第 336 题</span><span class="answer">×</span></div>
+          <div class="stem">验收测试是由内部测试团队进行的测试，用于评估软件系统的性能和稳定性。</div>
+        </article>
+
+        <article class="question" data-search="337 回归测试通常在每次代码变更之后都进行，以确保新的代码不会对现有功能造成
+负面影响。 √">
+          <div class="qhead"><span class="num">第 337 题</span><span class="answer">√</span></div>
+          <div class="stem">回归测试通常在每次代码变更之后都进行，以确保新的代码不会对现有功能造成
+负面影响。</div>
+        </article>
+
+        <article class="question" data-search="338 路径覆盖是白盒测试中一种测试方法，用于确保代码中的所有可能执行路径都被
+覆盖。 √">
+          <div class="qhead"><span class="num">第 338 题</span><span class="answer">√</span></div>
+          <div class="stem">路径覆盖是白盒测试中一种测试方法，用于确保代码中的所有可能执行路径都被
+覆盖。</div>
+        </article>
+
+        <article class="question" data-search="339 在语句覆盖中，代码行被执行表示该行的所有可能分支也都被执行。 ×">
+          <div class="qhead"><span class="num">第 339 题</span><span class="answer">×</span></div>
+          <div class="stem">在语句覆盖中，代码行被执行表示该行的所有可能分支也都被执行。</div>
+        </article>
+
+        <article class="question" data-search="340 判断覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。 ×">
+          <div class="qhead"><span class="num">第 340 题</span><span class="answer">×</span></div>
+          <div class="stem">判断覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。</div>
+        </article>
+
+        <article class="question" data-search="341 条件覆盖要求测试用例覆盖判断语句的所有可能条件。 √">
+          <div class="qhead"><span class="num">第 341 题</span><span class="answer">√</span></div>
+          <div class="stem">条件覆盖要求测试用例覆盖判断语句的所有可能条件。</div>
+        </article>
+
+        <article class="question" data-search="342 判定-条件覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。 ×">
+          <div class="qhead"><span class="num">第 342 题</span><span class="answer">×</span></div>
+          <div class="stem">判定-条件覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。</div>
+        </article>
+
+        <article class="question" data-search="343 条件组合覆盖要求测试用例覆盖判断语句的所有可能条件组合。 √">
+          <div class="qhead"><span class="num">第 343 题</span><span class="answer">√</span></div>
+          <div class="stem">条件组合覆盖要求测试用例覆盖判断语句的所有可能条件组合。</div>
+        </article>
+
+        <article class="question" data-search="344 路径覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。 ×">
+          <div class="qhead"><span class="num">第 344 题</span><span class="answer">×</span></div>
+          <div class="stem">路径覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。</div>
+        </article>
+
+        <article class="question" data-search="345 基本路径测试法对于复杂的程序可能需要大量的测试用例，因此在实际应用中可
+能存在一定的计算和管理成本。 √">
+          <div class="qhead"><span class="num">第 345 题</span><span class="answer">√</span></div>
+          <div class="stem">基本路径测试法对于复杂的程序可能需要大量的测试用例，因此在实际应用中可
+能存在一定的计算和管理成本。</div>
+        </article>
+
+        <article class="question" data-search="346 黑盒测试不考虑程序的源代码，而主要关注系统的输入和输出。 √">
+          <div class="qhead"><span class="num">第 346 题</span><span class="answer">√</span></div>
+          <div class="stem">黑盒测试不考虑程序的源代码，而主要关注系统的输入和输出。</div>
+        </article>
+
+        <article class="question" data-search="347 等价类划分法只适用于输入值的测试，不适用于输出值的测试。 ×">
+          <div class="qhead"><span class="num">第 347 题</span><span class="answer">×</span></div>
+          <div class="stem">等价类划分法只适用于输入值的测试，不适用于输出值的测试。</div>
+        </article>
+
+        <article class="question" data-search="348 边界值分析法主要用于测试数字输入，对于其他类型的输入并不适用。 ×">
+          <div class="qhead"><span class="num">第 348 题</span><span class="answer">×</span></div>
+          <div class="stem">边界值分析法主要用于测试数字输入，对于其他类型的输入并不适用。</div>
+        </article>
+
+        <article class="question" data-search="349 错误推测法的缺点是难以系统化，并且过度依赖个人能力。 √">
+          <div class="qhead"><span class="num">第 349 题</span><span class="answer">√</span></div>
+          <div class="stem">错误推测法的缺点是难以系统化，并且过度依赖个人能力。</div>
+        </article>
+
+        <article class="question" data-search="350 因果图法适用于任何规模和类型的系统，无论是传统的瀑布模型还是敏捷开发环
+境。 ×">
+          <div class="qhead"><span class="num">第 350 题</span><span class="answer">×</span></div>
+          <div class="stem">因果图法适用于任何规模和类型的系统，无论是传统的瀑布模型还是敏捷开发环
+境。</div>
+        </article>
+
+        <article class="question" data-search="351 判定表驱动法可以帮助测试团队设计全面而高效的测试用例。 √">
+          <div class="qhead"><span class="num">第 351 题</span><span class="answer">√</span></div>
+          <div class="stem">判定表驱动法可以帮助测试团队设计全面而高效的测试用例。</div>
+        </article>
+
+        <article class="question" data-search="352 正交试验法适用于排除变量之间的相互影响，以减少测试用例的数量。 √">
+          <div class="qhead"><span class="num">第 352 题</span><span class="answer">√</span></div>
+          <div class="stem">正交试验法适用于排除变量之间的相互影响，以减少测试用例的数量。</div>
+        </article>
+
+        <article class="question" data-search="353 场景法主要关注系统的内部实现细节。 ×">
+          <div class="qhead"><span class="num">第 353 题</span><span class="answer">×</span></div>
+          <div class="stem">场景法主要关注系统的内部实现细节。</div>
+        </article>
+
+        <article class="question" data-search="354 在测试方法选择的策略中，项目的预算和时间不是影响选择的重要因素。 ×">
+          <div class="qhead"><span class="num">第 354 题</span><span class="answer">×</span></div>
+          <div class="stem">在测试方法选择的策略中，项目的预算和时间不是影响选择的重要因素。</div>
+        </article>
+
+        <article class="question" data-search="355 测试用例的编写是软件测试过程中最后一步，可以在测试执行前随时完成。 ×">
+          <div class="qhead"><span class="num">第 355 题</span><span class="answer">×</span></div>
+          <div class="stem">测试用例的编写是软件测试过程中最后一步，可以在测试执行前随时完成。</div>
+        </article>
+
+        <article class="question" data-search="356 在测试用例设计中，“等价类划分”和“边界值分析”是两种不同的原则，分别
+关注输入值的分组和边界情况。 √">
+          <div class="qhead"><span class="num">第 356 题</span><span class="answer">√</span></div>
+          <div class="stem">在测试用例设计中，“等价类划分”和“边界值分析”是两种不同的原则，分别
+关注输入值的分组和边界情况。</div>
+        </article>
+
+        <article class="question" data-search="357 良好的测试用例应该具备高度的复杂度，以确保尽可能多地覆盖系统的功能。 ×">
+          <div class="qhead"><span class="num">第 357 题</span><span class="answer">×</span></div>
+          <div class="stem">良好的测试用例应该具备高度的复杂度，以确保尽可能多地覆盖系统的功能。</div>
+        </article>
+
+        <article class="question" data-search="358 高度依赖其他测试用例的测试用例通常有助于提高系统的稳定性。 ×">
+          <div class="qhead"><span class="num">第 358 题</span><span class="answer">×</span></div>
+          <div class="stem">高度依赖其他测试用例的测试用例通常有助于提高系统的稳定性。</div>
+        </article>
+
+        <article class="question" data-search="359 决策覆盖率和路径覆盖率是两个完全不同的概念，没有交集。 ×">
+          <div class="qhead"><span class="num">第 359 题</span><span class="answer">×</span></div>
+          <div class="stem">决策覆盖率和路径覆盖率是两个完全不同的概念，没有交集。</div>
+        </article>
+
+        <article class="question" data-search="360 在测试用例执行过程中，记录执行的详细信息对于后续的缺陷分析和改进非常重
+要。 √">
+          <div class="qhead"><span class="num">第 360 题</span><span class="answer">√</span></div>
+          <div class="stem">在测试用例执行过程中，记录执行的详细信息对于后续的缺陷分析和改进非常重
+要。</div>
+        </article>
+
+        <article class="question" data-search="361 在测试用例维护中，忽略变更并继续执行旧的测试用例是一种推荐的做法，以确
+保测试的稳定性。 ×">
+          <div class="qhead"><span class="num">第 361 题</span><span class="answer">×</span></div>
+          <div class="stem">在测试用例维护中，忽略变更并继续执行旧的测试用例是一种推荐的做法，以确
+保测试的稳定性。</div>
+        </article>
+
+        <article class="question" data-search="362 手工测试的另一个局限性是无法准确记录测试用例的执行步骤和结果。 ×">
+          <div class="qhead"><span class="num">第 362 题</span><span class="answer">×</span></div>
+          <div class="stem">手工测试的另一个局限性是无法准确记录测试用例的执行步骤和结果。</div>
+        </article>
+
+        <article class="question" data-search="363 自动化测试脚本的一个优势是能够适应系统变更，无需人工干预。 ×">
+          <div class="qhead"><span class="num">第 363 题</span><span class="answer">×</span></div>
+          <div class="stem">自动化测试脚本的一个优势是能够适应系统变更，无需人工干预。</div>
+        </article>
+
+        <article class="question" data-search="364 软件测试自动化不适用于具有短周期、频繁变更和灵活需求的项目。 √">
+          <div class="qhead"><span class="num">第 364 题</span><span class="answer">√</span></div>
+          <div class="stem">软件测试自动化不适用于具有短周期、频繁变更和灵活需求的项目。</div>
+        </article>
+
+        <article class="question" data-search="365 软件测试按照功能划分可以分为静态测试和动态测试。 ×">
+          <div class="qhead"><span class="num">第 365 题</span><span class="answer">×</span></div>
+          <div class="stem">软件测试按照功能划分可以分为静态测试和动态测试。</div>
+        </article>
+
+        <article class="question" data-search="366 工具的易用性是一个次要的因素，不应该在测试工具选择中考虑。 ×">
+          <div class="qhead"><span class="num">第 366 题</span><span class="answer">×</span></div>
+          <div class="stem">工具的易用性是一个次要的因素，不应该在测试工具选择中考虑。</div>
+        </article>
+
+        <article class="question" data-search="367 选择功能测试工具时，项目规模和复杂性是不重要的因素。 ×">
+          <div class="qhead"><span class="num">第 367 题</span><span class="answer">×</span></div>
+          <div class="stem">选择功能测试工具时，项目规模和复杂性是不重要的因素。</div>
+        </article>
+
+        <article class="question" data-search="368 在性能测试中，吞吐量越大表示系统的性能越好，响应时间越短。 ×">
+          <div class="qhead"><span class="num">第 368 题</span><span class="answer">×</span></div>
+          <div class="stem">在性能测试中，吞吐量越大表示系统的性能越好，响应时间越短。</div>
+        </article>
+
+        <article class="question" data-search="369 安全性测试工具主要关注系统的性能，而对系统的漏洞检测不敏感。 ×">
+          <div class="qhead"><span class="num">第 369 题</span><span class="answer">×</span></div>
+          <div class="stem">安全性测试工具主要关注系统的性能，而对系统的漏洞检测不敏感。</div>
+        </article>
+
+        <article class="question" data-search="370 缺陷跟踪系统的主要作用是记录测试用例的执行结果。 ×">
+          <div class="qhead"><span class="num">第 370 题</span><span class="answer">×</span></div>
+          <div class="stem">缺陷跟踪系统的主要作用是记录测试用例的执行结果。</div>
+        </article></section>
+    </div>
+    <footer>生成自三级 PDF 题库、答案 Markdown 与操作题素材目录。</footer>
+  </main>
+  
+    <script>
+      const search = document.querySelector('#search');
+      const count = document.querySelector('#count');
+      const toc = document.querySelector('#toc');
+      const expandAll = document.querySelector('#toc-expand-all');
+      const collapseAll = document.querySelector('#toc-collapse-all');
+      const items = Array.from(document.querySelectorAll('.question[data-search]'));
+      const navItems = new Map();
+      const majorGroups = [];
+      const minorGroups = [];
+
+      function questionNumber(item) {
+        const raw = item.querySelector('.num')?.textContent || '';
+        return Number(raw.match(/\d+/)?.[0] || 0);
+      }
+
+      function rangeLabel(start, end) {
+        return `${start}-${end}题`;
+      }
+
+      function setExpanded(toggle, target, expanded) {
+        toggle.setAttribute('aria-expanded', `${expanded}`);
+        target.hidden = !expanded;
+      }
+
+      function makeToggle(targetId, expanded, label) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'toc-toggle';
+        button.setAttribute('aria-controls', targetId);
+        button.setAttribute('aria-expanded', `${expanded}`);
+        button.setAttribute('aria-label', label);
+        return button;
+      }
+
+      function prepareItems() {
+        return items.map(item => {
+          const num = questionNumber(item);
+          const id = `q-${num}`;
+          item.id = id;
+          item.style.scrollMarginTop = '18px';
+          return { item, num, id };
+        }).filter(meta => meta.num > 0);
+      }
+
+      function buildToc() {
+        if (!toc) return;
+        const metas = prepareItems();
+        toc.textContent = '';
+        const max = Math.max(...metas.map(meta => meta.num));
+
+        for (let majorStart = 1; majorStart <= max; majorStart += 100) {
+          const majorEnd = Math.min(majorStart + 99, max);
+          const majorEntries = metas.filter(meta => meta.num >= majorStart && meta.num <= majorEnd);
+          if (!majorEntries.length) continue;
+
+          const majorEl = document.createElement('section');
+          const majorChildrenId = `toc-major-${majorStart}`;
+          const majorRow = document.createElement('div');
+          const majorToggle = makeToggle(majorChildrenId, true, `展开或收起${rangeLabel(majorStart, majorEnd)}`);
+          const majorTitle = document.createElement('div');
+          const majorCount = document.createElement('small');
+          const minors = document.createElement('ol');
+
+          majorEl.className = 'toc-major';
+          majorRow.className = 'toc-row toc-major-row';
+          majorTitle.className = 'toc-title';
+          majorTitle.innerHTML = '<span class="toc-range"></span>';
+          majorTitle.querySelector('.toc-range').textContent = rangeLabel(majorStart, majorEnd);
+          majorCount.className = 'toc-count';
+          majorCount.textContent = `${majorEntries.length}题`;
+          majorTitle.append(majorCount);
+          minors.id = majorChildrenId;
+          minors.className = 'toc-minors';
+          majorRow.append(majorToggle, majorTitle);
+          majorEl.append(majorRow, minors);
+          toc.append(majorEl);
+
+          const major = { el: majorEl, toggle: majorToggle, children: minors, count: majorCount, itemIds: majorEntries.map(meta => meta.id) };
+          majorGroups.push(major);
+
+          for (let minorStart = majorStart; minorStart <= majorEnd; minorStart += 10) {
+            const minorEnd = Math.min(minorStart + 9, majorEnd);
+            const minorEntries = majorEntries.filter(meta => meta.num >= minorStart && meta.num <= minorEnd);
+            if (!minorEntries.length) continue;
+
+            const minorEl = document.createElement('li');
+            const minorChildrenId = `toc-minor-${minorStart}`;
+            const minorRow = document.createElement('div');
+            const minorToggle = makeToggle(minorChildrenId, false, `展开或收起${rangeLabel(minorStart, minorEnd)}`);
+            const minorTitle = document.createElement('div');
+            const minorCount = document.createElement('small');
+            const questions = document.createElement('ol');
+
+            minorEl.className = 'toc-minor';
+            minorRow.className = 'toc-row toc-minor-row';
+            minorTitle.className = 'toc-title toc-minor-title';
+            minorTitle.innerHTML = '<span class="toc-range"></span>';
+            minorTitle.querySelector('.toc-range').textContent = rangeLabel(minorStart, minorEnd);
+            minorCount.className = 'toc-count';
+            minorCount.textContent = `${minorEntries.length}题`;
+            minorTitle.append(minorCount);
+            questions.id = minorChildrenId;
+            questions.className = 'toc-questions';
+            questions.hidden = true;
+            minorRow.append(minorToggle, minorTitle);
+            minorEl.append(minorRow, questions);
+            minors.append(minorEl);
+
+            const minor = { el: minorEl, toggle: minorToggle, children: questions, count: minorCount, itemIds: minorEntries.map(meta => meta.id), major };
+            minorGroups.push(minor);
+
+            minorEntries.forEach(meta => {
+              const li = document.createElement('li');
+              const link = document.createElement('a');
+              li.className = 'toc-question';
+              li.dataset.target = meta.id;
+              link.href = `#${meta.id}`;
+              link.textContent = `第 ${meta.num} 题`;
+              li.append(link);
+              questions.append(li);
+              navItems.set(meta.id, li);
+            });
+          }
+        }
+      }
+
+      function update() {
+        const q = (search?.value || '').trim().toLowerCase();
+        let visible = 0;
+        items.forEach(item => {
+          const ok = !q || item.dataset.search.toLowerCase().includes(q);
+          item.classList.toggle('hidden', !ok);
+          navItems.get(item.id)?.classList.toggle('hidden', !ok);
+          if (ok) visible++;
+        });
+
+        minorGroups.forEach(group => {
+          const visibleItems = group.itemIds.filter(id => !navItems.get(id)?.classList.contains('hidden')).length;
+          group.el.classList.toggle('hidden', visibleItems === 0);
+          group.count.textContent = q ? `${visibleItems} / ${group.itemIds.length}` : `${group.itemIds.length}题`;
+          if (q && visibleItems > 0) setExpanded(group.toggle, group.children, true);
+        });
+
+        majorGroups.forEach(group => {
+          const visibleItems = group.itemIds.filter(id => !navItems.get(id)?.classList.contains('hidden')).length;
+          group.el.classList.toggle('hidden', visibleItems === 0);
+          group.count.textContent = q ? `${visibleItems} / ${group.itemIds.length}` : `${group.itemIds.length}题`;
+          if (q && visibleItems > 0) setExpanded(group.toggle, group.children, true);
+        });
+
+        if (count) count.textContent = `${visible} / ${items.length}`;
+      }
+
+      function setActiveFromHash() {
+        const hash = decodeURIComponent(location.hash.replace(/^#/, ''));
+        navItems.forEach((li, id) => li.classList.toggle('active', id === hash));
+        const targetMinor = minorGroups.find(group => group.itemIds.includes(hash));
+        if (targetMinor) {
+          setExpanded(targetMinor.major.toggle, targetMinor.major.children, true);
+          setExpanded(targetMinor.toggle, targetMinor.children, true);
+        }
+      }
+
+      buildToc();
+
+      toc?.addEventListener('click', event => {
+        const toggle = event.target.closest('.toc-toggle');
+        if (!toggle) return;
+        const target = document.getElementById(toggle.getAttribute('aria-controls'));
+        if (target) setExpanded(toggle, target, toggle.getAttribute('aria-expanded') !== 'true');
+      });
+
+      expandAll?.addEventListener('click', () => {
+        majorGroups.forEach(group => setExpanded(group.toggle, group.children, true));
+        minorGroups.forEach(group => setExpanded(group.toggle, group.children, true));
+      });
+
+      collapseAll?.addEventListener('click', () => {
+        majorGroups.forEach(group => setExpanded(group.toggle, group.children, false));
+        minorGroups.forEach(group => setExpanded(group.toggle, group.children, false));
+      });
+
+      window.addEventListener('hashchange', setActiveFromHash);
+      search?.addEventListener('input', update);
+      update();
+      setActiveFromHash();
+    </script>
+
+</body>
+</html>
